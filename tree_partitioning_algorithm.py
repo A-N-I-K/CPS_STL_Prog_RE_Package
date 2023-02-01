@@ -15,8 +15,8 @@ from treelib import Node, Tree
 # binaryOperators = ['+', '-', '*', '^']
 # unaryOperators = ['sin']
 
-binaryOperators = ['AND', 'OR', 'U[a, b]', 'R[a, b]']
-unaryOperators = ['G[a, b]', 'F[a, b]', '!']
+binaryOperators = ['A', 'O', 'U', 'R']
+unaryOperators = ['G', 'F', '!']
 
 # def addNodeRec(selfID, parentID, synTree, expTree):
 #
@@ -46,23 +46,35 @@ unaryOperators = ['G[a, b]', 'F[a, b]', '!']
 #         addNodeRec(selfID, parentID, synTree, expTree)
 
 
-def addNodeRec(selfID, parentID, selfVar, parentVar, synTree, expTree):
+def addNodeRec(selfID, parentID, selfVar, parentVar, synTree, expTree, qMat, qParent):
 
     if selfID[0] == 0:
 
         if expTree[selfID[0]][0] == 'G':
 
-            synTree.create_node('FORALL i_{} \in {}'.format(selfVar[0], expTree[selfID[0]][1:]), selfID[0])
+            synTree.create_node('(ID: {}) FORALL i_{} \in {}'.format(selfID[0], selfVar[0], expTree[selfID[0]][1:]), selfID[0])
 
             parentVar = selfVar[0]
             selfVar[0] += 1
+
+            qMat[0].append(0)
+            qParent = 0
+            qMat.append([0])
 
         elif expTree[selfID[0]][0] == 'F':
 
-            synTree.create_node('EXISTS i_{} \in {}'.format(selfVar[0], expTree[selfID[0]][1:]), selfID[0])
+            synTree.create_node('(ID: {}) EXISTS i_{} \in {}'.format(selfID[0], selfVar[0], expTree[selfID[0]][1:]), selfID[0])
 
             parentVar = selfVar[0]
             selfVar[0] += 1
+
+            qMat[0].append(0)
+            qParent = 0
+            qMat.append([0])
+
+        elif not (expTree[selfID[0]][0] in binaryOperators or expTree[selfID[0]][0] in unaryOperators):
+
+            synTree.create_node('(\sigma, 0) \models {}'.format(expTree[selfID[0]]), selfID[0])
 
         else:
 
@@ -74,17 +86,29 @@ def addNodeRec(selfID, parentID, selfVar, parentVar, synTree, expTree):
 
             if expTree[selfID[0]][0] == 'G':
 
-                synTree.create_node('FORALL i_{} \in {}'.format(selfVar[0], expTree[selfID[0]][1:]), selfID[0], parent = parentID)
+                synTree.create_node('(ID: {}) FORALL i_{} \in {}'.format(selfID[0], selfVar[0], expTree[selfID[0]][1:]), selfID[0], parent = parentID)
 
                 parentVar = selfVar[0]
                 selfVar[0] += 1
+
+                qMat[0].append(selfID[0])
+                qParent = selfID[0]
+                qMat.append([qParent])
 
             elif expTree[selfID[0]][0] == 'F':
 
-                synTree.create_node('EXISTS i_{} \in {}'.format(selfVar[0], expTree[selfID[0]][1:]), selfID[0], parent = parentID)
+                synTree.create_node('(ID: {}) EXISTS i_{} \in {}'.format(selfID[0], selfVar[0], expTree[selfID[0]][1:]), selfID[0], parent = parentID)
 
                 parentVar = selfVar[0]
                 selfVar[0] += 1
+
+                qMat[0].append(selfID[0])
+                qParent = selfID[0]
+                qMat.append([qParent])
+
+            elif not (expTree[selfID[0]][0] in binaryOperators or expTree[selfID[0]][0] in unaryOperators):
+
+                synTree.create_node('(\sigma, 0) \models {}'.format(expTree[selfID[0]]), selfID[0])
 
             else:
 
@@ -94,38 +118,59 @@ def addNodeRec(selfID, parentID, selfVar, parentVar, synTree, expTree):
 
             if expTree[selfID[0]][0] == 'G':
 
-                synTree.create_node('FORALL i_{} \in {} + i_{}{} + i_{}{}'.format(selfVar[0], expTree[selfID[0]][1:expTree[selfID[0]].find(',')], parentVar, expTree[selfID[0]][expTree[selfID[0]].find(','):-1], parentVar, expTree[selfID[0]][-1]), selfID[0], parent = parentID)
+                # synTree.create_node('FORALL i_{} \in {} + i_{}{} + i_{}{}'.format(selfVar[0], expTree[selfID[0]][1:expTree[selfID[0]].find(',')], parentVar, expTree[selfID[0]][expTree[selfID[0]].find(','):-1], parentVar, expTree[selfID[0]][-1]), selfID[0], parent = parentID)
+                synTree.create_node('(ID: {}) FORALL i_{} \in {} + i_{}{} + i_{}{}'.format(selfID[0], selfVar[0], expTree[selfID[0]][1:expTree[selfID[0]].find(',')], parentVar, expTree[selfID[0]][expTree[selfID[0]].find(','):-1], parentVar, expTree[selfID[0]][-1]), selfID[0], parent = parentID)
 
                 parentVar = selfVar[0]
                 selfVar[0] += 1
+
+                for i in range(len(qMat)):
+
+                    if qMat[i][0] == qParent:
+
+                        qMat[i].append(selfID[0])
+                        qParent = selfID[0]
+                        qMat.append([qParent])
 
             elif expTree[selfID[0]][0] == 'F':
 
-                synTree.create_node('EXISTS i_{} \in {} + i_{}{} + i_{}{}'.format(selfVar[0], expTree[selfID[0]][1:expTree[selfID[0]].find(',')], parentVar, expTree[selfID[0]][expTree[selfID[0]].find(','):-1], parentVar, expTree[selfID[0]][-1]), selfID[0], parent = parentID)
+                synTree.create_node('(ID: {}) EXISTS i_{} \in {} + i_{}{} + i_{}{}'.format(selfID[0], selfVar[0], expTree[selfID[0]][1:expTree[selfID[0]].find(',')], parentVar, expTree[selfID[0]][expTree[selfID[0]].find(','):-1], parentVar, expTree[selfID[0]][-1]), selfID[0], parent = parentID)
 
                 parentVar = selfVar[0]
                 selfVar[0] += 1
+
+                for i in range(len(qMat)):
+
+                    if qMat[i][0] == qParent:
+
+                        qMat[i].append(selfID[0])
+                        qParent = selfID[0]
+                        qMat.append([qParent])
+
+            elif not (expTree[selfID[0]][0] in binaryOperators or expTree[selfID[0]][0] in unaryOperators):
+
+                synTree.create_node('(\sigma, i_{}) \models {}'.format(parentVar, expTree[selfID[0]]), selfID[0], parent = parentID)
 
             else:
 
                 synTree.create_node(expTree[selfID[0]], selfID[0], parent = parentID)
 
-    if expTree[selfID[0]] in binaryOperators:
+    if expTree[selfID[0]][0] in binaryOperators:
 
         parentID = selfID[0]
 
         selfID[0] += 1
-        addNodeRec(selfID, parentID, selfVar, parentVar, synTree, expTree)
+        addNodeRec(selfID, parentID, selfVar, parentVar, synTree, expTree, qMat, qParent)
 
         selfID[0] += 1
-        addNodeRec(selfID, parentID, selfVar, parentVar, synTree, expTree)
+        addNodeRec(selfID, parentID, selfVar, parentVar, synTree, expTree, qMat, qParent)
 
-    if expTree[selfID[0]] in unaryOperators:
+    if expTree[selfID[0]][0] in unaryOperators:
 
         parentID = selfID[0]
 
         selfID[0] += 1
-        addNodeRec(selfID, parentID, selfVar, parentVar, synTree, expTree)
+        addNodeRec(selfID, parentID, selfVar, parentVar, synTree, expTree, qMat, qParent)
 
 
 def genSynTree(exp):
@@ -141,6 +186,8 @@ def genSynTree(exp):
                 Operator(symbol = 'OR', precedence = 2),
                 Operator(symbol = 'G[a, b]', type = Operator.unary, precedence = 3, associativity = Operator.rtl, position = Operator.prefix),
                 Operator(symbol = 'F[a, b]', type = Operator.unary, precedence = 3, associativity = Operator.rtl, position = Operator.prefix),
+                Operator(symbol = 'G[0, 5]', type = Operator.unary, precedence = 3, associativity = Operator.rtl, position = Operator.prefix),
+                Operator(symbol = 'F[0, 10]', type = Operator.unary, precedence = 3, associativity = Operator.rtl, position = Operator.prefix),
                 Operator(symbol = 'U[a, b]', precedence = 2),
                 Operator(symbol = 'R[a, b]', precedence = 2),
                 Operator(symbol = '!', type = Operator.unary, precedence = 3, associativity = Operator.rtl, position = Operator.prefix)]
@@ -153,7 +200,12 @@ def genSynTree(exp):
     selfID = [0]
     selfVar = [0]
 
-    addNodeRec(selfID, 0, selfVar, -1, synTree, expTree)
+    qMat = []
+    qMat.append([-1])
+
+    addNodeRec(selfID, 0, selfVar, -1, synTree, expTree, qMat, -1)
+
+    printMatrix(qMat)
 
     return synTree
 
@@ -168,13 +220,30 @@ def getNodeData(synTree, nodeID):
     return synTree[nodeID].tag
 
 
+def printMatrix(qMat):
+
+    testPrint = "";
+
+    # qMat = [[1, 2], [3, 4]]
+
+    for i in range(len(qMat)):
+
+        for j in range(len(qMat[i])):
+
+            testPrint += "{} ".format(qMat[i][j])
+
+        print(testPrint)
+        testPrint = ""
+
+
 def main():
 
     # tr = parser.syntax_tree('(a + b) * c').preorder()
     # exp = '(a + b) * sin(sin(c))'
     # exp = '(a + b) * (c + d)'
     # exp = 'G[a, b](F[a, b] A)'
-    exp = 'F[a, b](F[a, b](G[a, b]p) AND G[a, b] !(q OR G[a, b]r))'
+    # exp = 'F[a, b](F[a, b](G[a, b]p) AND G[a, b] !(q OR G[a, b]r))'
+    exp = 'F[0, 10](p AND G[0, 5] !q)'
     
     # tr = parser.postfix(exp)
     # tr = parser.syntax_tree(exp).preorder()
@@ -187,7 +256,7 @@ def main():
     synTree = genSynTree(exp)
     synTree.show()
 
-    print(getNodeData(synTree, 0))
+    # print(getNodeData(synTree, 0))
 
     return
 
