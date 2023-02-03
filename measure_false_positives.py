@@ -7,7 +7,7 @@ Created on Jan 29, 2023
 
 def getData(id):
 
-    file = open("data_tank/sig_{}.txt".format(id))
+    file = open("data_tank/fp_{}.txt".format(id))
     line = file.readline()
     data = []
 
@@ -18,7 +18,7 @@ def getData(id):
 
         for i in range(2):
 
-            values.append(int(param[i].strip()))
+            values.append(float(param[i].strip()))
 
         data.append(values)
         line = file.readline()
