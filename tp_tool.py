@@ -11,7 +11,7 @@ from AlgebraicExpressionParser import Operators
 from treelib import Tree
 
 binaryOperators = ['A', 'O', 'U', 'R']
-unaryOperators = ['G', 'F', '!']
+unaryOperators = ['G', 'F', '~']
 
 qMat = []
 qMat.append([-1])
@@ -151,7 +151,7 @@ def genSynTree(exp):
                 Operator(symbol = 'F[a, b]', type = Operator.unary, precedence = 3, associativity = Operator.rtl, position = Operator.prefix),
                 Operator(symbol = 'U[a, b]', precedence = 2),
                 Operator(symbol = 'R[a, b]', precedence = 2),
-                Operator(symbol = '!', type = Operator.unary, precedence = 3, associativity = Operator.rtl, position = Operator.prefix)]
+                Operator(symbol = '~', type = Operator.unary, precedence = 3, associativity = Operator.rtl, position = Operator.prefix)]
 
     for i in range(len(exp)):
 
