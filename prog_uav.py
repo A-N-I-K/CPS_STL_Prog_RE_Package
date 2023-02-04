@@ -1739,7 +1739,7 @@ def main():
     if len(sys.argv) == 3:
 
         epsTemp = max(float(sys.argv[1]), 0.01)
-        eps = min(epsTemp, 0.99)
+        eps = min(epsTemp, 0.05)
         agentsTemp = max(int(sys.argv[2]), 2)
         agents = min(agentsTemp, 4)
         
