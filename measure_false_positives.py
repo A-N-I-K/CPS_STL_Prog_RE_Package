@@ -1,6 +1,4 @@
 '''
-Created on Jan 29, 2023
-
 @author: ANIK
 '''
 
@@ -120,16 +118,6 @@ def getTankStats(data0, data1, eps):
                 if i + eps == j:
                     
                     trueMatch += 1
-
-                    # print(((i, data0[i][1]), (i + 1, data0[i + 1][1])), ((j, data1[j][1]), (j + 1, data1[j + 1][1])))
-
-        # print(" ")
-
-    #print("Total Events\t:\t{}".format(dur))
-    # print("Total Hits (0)\t:\t{} ({}%)".format(hit0, round((hit0 / dur) * 100, 2)))
-    # print("Total Hits (1)\t:\t{} ({}%)".format(hit1, round((hit1 / dur) * 100, 2)))
-    #print("Total Matches\t:\t{} ({}%)".format(hitMatch, round((hitMatch / dur) * 100, 2)))
-    #print("True Matches\t:\t{} ({}%)".format(trueMatch, round((trueMatch / dur) * 100, 2)))
     
     print("{}\t{}\t\t{}\t\t{}\t\t{}%%\n".format(eps / 20, trueMatch, hitMatch, hitMatch - trueMatch, round(((hitMatch - trueMatch) / hitMatch) * 100, 2)))
 
@@ -153,16 +141,6 @@ def getDroneStats(data0, data1, eps):
                 if i + eps == j:
 
                     trueMatch += 1
-
-                    # print(((i, data0[i][1]), (i + 1, data0[i + 1][1])), ((j, data1[j][1]), (j + 1, data1[j + 1][1])))
-
-        # print(" ")
-
-    # print("Total Events\t:\t{}".format(dur))
-    # print("Total Hits (0)\t:\t{} ({}%)".format(hit0, round((hit0 / dur) * 100, 2)))
-    # print("Total Hits (1)\t:\t{} ({}%)".format(hit1, round((hit1 / dur) * 100, 2)))
-    # print("Total Matches\t:\t{} ({}%)".format(hitMatch, round((hitMatch / dur) * 100, 2)))
-    # print("True Matches\t:\t{} ({}%)".format(trueMatch, round((trueMatch / dur) * 100, 2)))
 
     print("{}\t{}\t\t{}\t\t{}\t\t{}%%\n".format(eps / 20, trueMatch, hitMatch, hitMatch - trueMatch, round(((hitMatch - trueMatch) / hitMatch) * 100, 2)))
 

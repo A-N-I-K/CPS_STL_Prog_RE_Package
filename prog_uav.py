@@ -1,6 +1,4 @@
 '''
-Created on Feb 3, 2023
-
 @author: ANIK
 '''
 
@@ -1764,7 +1762,7 @@ def main():
 
     print("Mutual separation:\n")
 
-    print("\t\t Segment 1\t\t Segment 2\t\t Segment 3\t\t Segment 4\t\t Segment 5", end = " ")
+    print("\t\tSegment 1\t\tSegment 2\t\tSegment 3\t\tSegment 4\t\tSegment 5", end = " ")
     
     if agents2:
 
@@ -1822,7 +1820,7 @@ def main():
 
     print("\n\nEventually hover:\n")
 
-    print("\t\t Segment 1\t\t Segment 2\t\t Segment 3\t\t Segment 4\t\t Segment 5", end = " ")
+    print("\t\tSegment 1\t\tSegment 2\t\tSegment 3\t\tSegment 4\t\tSegment 5", end = " ")
     
     if agents2:
 
@@ -1880,7 +1878,7 @@ def main():
 
     print("\n\nEventually land:\n")
 
-    print("\t\t Segment 1\t\t Segment 2\t\t Segment 3\t\t Segment 4\t\t Segment 5", end = " ")
+    print("\t\tSegment 1\t\tSegment 2\t\tSegment 3\t\tSegment 4\t\tSegment 5", end = " ")
     
     if agents2:
 
@@ -1935,31 +1933,6 @@ def main():
                 total_time += dur
     
             print("{}\t".format(total_time / repeat), end = " ")
-
-    # repeat = 10
-    # total_time = 0
-
-    # for j in range(5):
-    #
-    #     for i in range(repeat):
-    #
-    #         start = time.time()
-    #         # prog_uav_mutual_separation(0.05, 1, 1, 1)
-    #         # prog_uav_mutual_separation_3(0.05, 1, 1)
-    #         # prog_uav_mutual_separation_4(0.05, 1, 1)
-    #         prog_uav_hover(0.05, 1, 1, j + 1)
-    #         # prog_uav_hover_3(0.05, 1, 1)
-    #         # prog_uav_hover_4(0.05, 1, 1)
-    #         # prog_tanks_pressure(0.05, 1, 1)
-    #         # prog_tanks_pressure_three(0.05, 5, 1)
-    #         # prog_tanks_pressure_four(0.05, 1, 1)
-    #         end = time.time()
-    #         # print("\nTime elapsed :", (end - start), "seconds")
-    #         dur = end - start
-    #         print(i, "\t:\t", dur)
-    #         total_time += dur
-    #
-    #     print("\nAverage :\t", total_time / repeat)
 
 
 if __name__ == '__main__':

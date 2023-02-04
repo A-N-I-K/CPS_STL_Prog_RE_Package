@@ -343,8 +343,6 @@ def main():
             print('SMT syntax tree partitioned at time {}:\n'.format(time))
             synTree.show()
 
-    return
-
 if __name__ == '__main__':
 
     main()
