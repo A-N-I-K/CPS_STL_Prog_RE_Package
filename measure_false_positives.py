@@ -5,9 +5,9 @@ Created on Jan 29, 2023
 '''
 
 
-def getData(id):
+def getTankData(id):
 
-    file = open("data_tank/fp_{}.txt".format(id))
+    file = open("data/wt/s36000_tank_{}".format(id))
     line = file.readline()
     data = []
 
@@ -23,7 +23,27 @@ def getData(id):
         data.append(values)
         line = file.readline()
 
-    # print(data)
+    return data
+
+
+def getDroneData(id):
+
+    file = open("data/uav/s36000_uav_{}".format(id))
+    line = file.readline()
+    data = []
+
+    while line:
+
+        param = line.split('\t')
+        values = []
+
+        for i in range(4):
+
+            values.append(float(param[i].strip()))
+
+        data.append(values)
+        line = file.readline()
+
     return data
 
 
@@ -81,11 +101,11 @@ def hasViolation(line1, line2):
             return False
 
 
-def getStats(data0, data1, eps):
+def getTankStats(data0, data1, eps):
     
     dur = len(data0)
-    hit0 = 0
-    hit1 = 0
+    # hit0 = 0
+    # hit1 = 0
     hitMatch = 0
     trueMatch = 0
 
@@ -105,22 +125,71 @@ def getStats(data0, data1, eps):
 
         # print(" ")
 
-    print("Total Events\t:\t{}".format(dur))
+    #print("Total Events\t:\t{}".format(dur))
     # print("Total Hits (0)\t:\t{} ({}%)".format(hit0, round((hit0 / dur) * 100, 2)))
     # print("Total Hits (1)\t:\t{} ({}%)".format(hit1, round((hit1 / dur) * 100, 2)))
-    print("Total Matches\t:\t{} ({}%)".format(hitMatch, round((hitMatch / dur) * 100, 2)))
-    print("True Matches\t:\t{} ({}%)".format(trueMatch, round((trueMatch / dur) * 100, 2)))
+    #print("Total Matches\t:\t{} ({}%)".format(hitMatch, round((hitMatch / dur) * 100, 2)))
+    #print("True Matches\t:\t{} ({}%)".format(trueMatch, round((trueMatch / dur) * 100, 2)))
+    
+    print("{}\t{}\t\t{}\t\t{}\t\t{}%%\n".format(eps / 20, trueMatch, hitMatch, hitMatch - trueMatch, round(((hitMatch - trueMatch) / hitMatch) * 100, 2)))
+
+
+def getDroneStats(data0, data1, eps):
+
+    dur = len(data0)
+    # hit0 = 0
+    # hit1 = 0
+    hitMatch = 0
+    trueMatch = 0
+
+    for i in range(dur - 1):
+
+        for j in range(max(i - eps, 0), min(i + eps + 1, dur - 1)):
+
+            if hasViolation([[i, data0[i][1]], [i + 1, data0[i + 1][1]]], [[i, data1[j][1]], [i + 1, data1[j + 1][1]]]) and hasViolation([[i, data0[i][2]], [i + 1, data0[i + 1][2]]], [[i, data1[j][2]], [i + 1, data1[j + 1][2]]]) and hasViolation([[i, data0[i][3]], [i + 1, data0[i + 1][3]]], [[i, data1[j][3]], [i + 1, data1[j + 1][3]]]):
+
+                hitMatch += 1
+
+                if i + eps == j:
+
+                    trueMatch += 1
+
+                    # print(((i, data0[i][1]), (i + 1, data0[i + 1][1])), ((j, data1[j][1]), (j + 1, data1[j + 1][1])))
+
+        # print(" ")
+
+    # print("Total Events\t:\t{}".format(dur))
+    # print("Total Hits (0)\t:\t{} ({}%)".format(hit0, round((hit0 / dur) * 100, 2)))
+    # print("Total Hits (1)\t:\t{} ({}%)".format(hit1, round((hit1 / dur) * 100, 2)))
+    # print("Total Matches\t:\t{} ({}%)".format(hitMatch, round((hitMatch / dur) * 100, 2)))
+    # print("True Matches\t:\t{} ({}%)".format(trueMatch, round((trueMatch / dur) * 100, 2)))
+
+    print("{}\t{}\t\t{}\t\t{}\t\t{}%%\n".format(eps / 20, trueMatch, hitMatch, hitMatch - trueMatch, round(((hitMatch - trueMatch) / hitMatch) * 100, 2)))
 
 
 def main():
 
-    data0 = getData(0)
-    data1 = getData(1)
+    data0 = getTankData(0)
+    data1 = getTankData(1)
     
-    getStats(data0, data1, 10)
-    # print(hasViolation([[0, 0], [1, 0]], [[0, 20], [1, 10]]))
+    print("Water tank false positives:\n")
+    print("Clock\tTrue\t\tDetected\tFalse\t\tFalse +ve")
+    print("Skew\tViolations\tViolations\tPositives\tPercentage\n")
     
-    return
+    for i in range(10):
+
+        getTankStats(data0, data1, i + 1)
+
+    data0 = getDroneData(0)
+    data1 = getDroneData(1)
+
+    print("UAV false positives:\n")
+    print("Clock\tTrue\t\tDetected\tFalse\t\tFalse +ve")
+    print("Skew\tViolations\tViolations\tPositives\tPercentage\n")
+    
+    for i in range(10):
+
+        getTankStats(data0, data1, i + 1)
 
 
 if __name__ == '__main__':

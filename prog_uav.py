@@ -42,8 +42,8 @@ def prog_uav_mutual_separation(eps, sigDur, segCount, segID):
 
     # ===== READ DATA START ===== #
 
-    data_0 = getData("s{}_uav_0".format(segID))
-    data_1 = getData("s{}_uav_1".format(segID))
+    data_0 = getTankData("s{}_uav_0".format(segID))
+    data_1 = getTankData("s{}_uav_1".format(segID))
 
     i = 0
     solvers = []
@@ -188,9 +188,9 @@ def prog_uav_mutual_separation_3(eps, sigDur, segCount, segID):
 
     # ===== READ DATA START ===== #
 
-    data_0 = getData("s{}_uav_0".format(segID))
-    data_1 = getData("s{}_uav_1".format(segID))
-    data_2 = getData("s{}_uav_2".format(segID))
+    data_0 = getTankData("s{}_uav_0".format(segID))
+    data_1 = getTankData("s{}_uav_1".format(segID))
+    data_2 = getTankData("s{}_uav_2".format(segID))
 
     i = 0
     solvers = []
@@ -367,10 +367,10 @@ def prog_uav_mutual_separation_4(eps, sigDur, segCount, segID):
 
     # ===== READ DATA START ===== #
 
-    data_0 = getData("s{}_uav_0".format(segID))
-    data_1 = getData("s{}_uav_1".format(segID))
-    data_2 = getData("s{}_uav_2".format(segID))
-    data_3 = getData("s{}_uav_3".format(segID))
+    data_0 = getTankData("s{}_uav_0".format(segID))
+    data_1 = getTankData("s{}_uav_1".format(segID))
+    data_2 = getTankData("s{}_uav_2".format(segID))
+    data_3 = getTankData("s{}_uav_3".format(segID))
 
     i = 0
     solvers = []
@@ -581,8 +581,8 @@ def prog_uav_hover(eps, sigDur, segCount, segID):
 
     # ===== READ DATA START ===== #
 
-    data_0 = getData("s{}_uav_0".format(segID))
-    data_1 = getData("s{}_uav_1".format(segID))
+    data_0 = getTankData("s{}_uav_0".format(segID))
+    data_1 = getTankData("s{}_uav_1".format(segID))
 
     i = 0
     solvers = []
@@ -749,9 +749,9 @@ def prog_uav_hover_3(eps, sigDur, segCount, segID):
 
     # ===== READ DATA START ===== #
 
-    data_0 = getData("s{}_uav_0".format(segID))
-    data_1 = getData("s{}_uav_1".format(segID))
-    data_2 = getData("s{}_uav_2".format(segID))
+    data_0 = getTankData("s{}_uav_0".format(segID))
+    data_1 = getTankData("s{}_uav_1".format(segID))
+    data_2 = getTankData("s{}_uav_2".format(segID))
 
     i = 0
     solvers = []
@@ -953,10 +953,10 @@ def prog_uav_hover_4(eps, sigDur, segCount, segID):
 
     # ===== READ DATA START ===== #
 
-    data_0 = getData("s{}_uav_0".format(segID))
-    data_1 = getData("s{}_uav_1".format(segID))
-    data_2 = getData("s{}_uav_2".format(segID))
-    data_3 = getData("s{}_uav_3".format(segID))
+    data_0 = getTankData("s{}_uav_0".format(segID))
+    data_1 = getTankData("s{}_uav_1".format(segID))
+    data_2 = getTankData("s{}_uav_2".format(segID))
+    data_3 = getTankData("s{}_uav_3".format(segID))
 
     i = 0
     solvers = []
@@ -1188,8 +1188,8 @@ def prog_uav_land(eps, sigDur, segCount, segID):
 
     # ===== READ DATA START ===== #
 
-    data_0 = getData("s{}_uav_0".format(segID))
-    data_1 = getData("s{}_uav_1".format(segID))
+    data_0 = getTankData("s{}_uav_0".format(segID))
+    data_1 = getTankData("s{}_uav_1".format(segID))
 
     i = 0
     solvers = []
@@ -1333,9 +1333,9 @@ def prog_uav_land_3(eps, sigDur, segCount, segID):
 
     # ===== READ DATA START ===== #
 
-    data_0 = getData("s{}_uav_0".format(segID))
-    data_1 = getData("s{}_uav_1".format(segID))
-    data_2 = getData("s{}_uav_2".format(segID))
+    data_0 = getTankData("s{}_uav_0".format(segID))
+    data_1 = getTankData("s{}_uav_1".format(segID))
+    data_2 = getTankData("s{}_uav_2".format(segID))
 
     i = 0
     solvers = []
@@ -1505,10 +1505,10 @@ def prog_uav_land_4(eps, sigDur, segCount, segID):
 
     # ===== READ DATA START ===== #
 
-    data_0 = getData("s{}_uav_0".format(segID))
-    data_1 = getData("s{}_uav_1".format(segID))
-    data_2 = getData("s{}_uav_2".format(segID))
-    data_3 = getData("s{}_uav_3".format(segID))
+    data_0 = getTankData("s{}_uav_0".format(segID))
+    data_1 = getTankData("s{}_uav_1".format(segID))
+    data_2 = getTankData("s{}_uav_2".format(segID))
+    data_3 = getTankData("s{}_uav_3".format(segID))
 
     i = 0
     solvers = []
@@ -1676,7 +1676,7 @@ def prog_uav_land_4(eps, sigDur, segCount, segID):
         s.reset()
 
 
-def getData(agent_ID):
+def getTankData(agent_ID):
 
     file = open('data/uav/{}'.format(agent_ID))
     line = file.readline()
