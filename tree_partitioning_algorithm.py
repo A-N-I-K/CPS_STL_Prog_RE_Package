@@ -4,49 +4,18 @@ Created on Jan 30, 2023
 @author: ANIK
 '''
 
-from test.test_print import TestPrint
-import ast
 import random
 
 from AlgebraicExpressionParser import ExpressionParser
 from AlgebraicExpressionParser import Operator
 from AlgebraicExpressionParser import Operators
-from treelib import Node, Tree
+from treelib import Tree
 
-# binaryOperators = ['+', '-', '*', '^']
-# unaryOperators = ['sin']
 binaryOperators = ['A', 'O', 'U', 'R']
 unaryOperators = ['G', 'F', '!']
 
 qMat = []
 qMat.append([-1])
-
-# def addNodeRec(selfID, parentID, synTree, expTree):
-#
-#     if selfID[0] == 0:
-#
-#         synTree.create_node(expTree[selfID[0]], selfID[0])
-#
-#     else:
-#
-#         synTree.create_node(expTree[selfID[0]], selfID[0], parent = parentID)
-#
-#     if expTree[selfID[0]] in binaryOperators:
-#
-#         parentID = selfID[0]
-#
-#         selfID[0] += 1
-#         addNodeRec(selfID, parentID, synTree, expTree)
-#
-#         selfID[0] += 1
-#         addNodeRec(selfID, parentID, synTree, expTree)
-#
-#     if expTree[selfID[0]] in unaryOperators:
-#
-#         parentID = selfID[0]
-#
-#         selfID[0] += 1
-#         addNodeRec(selfID, parentID, synTree, expTree)
 
 
 def addNodeRec(selfID, parentID, selfVar, parentVar, synTree, expTree, qMat, qParent):
@@ -178,22 +147,20 @@ def addNodeRec(selfID, parentID, selfVar, parentVar, synTree, expTree, qMat, qPa
 
 def genSynTree(exp):
 
-    # operators = [Operator(symbol = '+'),
-    #              Operator(symbol = '-'),
-    #              Operator(symbol = '*', precedence = 2),
-    #              Operator(symbol = '-', type = Operator.unary, precedence = 3, associativity = Operator.rtl, position = Operator.prefix),
-    #              Operator(symbol = '^', precedence = 4),
-    #              Operator(symbol = 'sin', type = Operator.unary, precedence = 3, associativity = Operator.rtl, position = Operator.prefix)]
-
     operators = [Operator(symbol = 'AND', precedence = 2),
                 Operator(symbol = 'OR', precedence = 2),
                 Operator(symbol = 'G[a, b]', type = Operator.unary, precedence = 3, associativity = Operator.rtl, position = Operator.prefix),
                 Operator(symbol = 'F[a, b]', type = Operator.unary, precedence = 3, associativity = Operator.rtl, position = Operator.prefix),
-                Operator(symbol = 'G[0, 5]', type = Operator.unary, precedence = 3, associativity = Operator.rtl, position = Operator.prefix),
-                Operator(symbol = 'F[0, 10]', type = Operator.unary, precedence = 3, associativity = Operator.rtl, position = Operator.prefix),
                 Operator(symbol = 'U[a, b]', precedence = 2),
                 Operator(symbol = 'R[a, b]', precedence = 2),
                 Operator(symbol = '!', type = Operator.unary, precedence = 3, associativity = Operator.rtl, position = Operator.prefix)]
+
+    for i in range(len(exp)):
+
+        if exp[i] == '[':
+
+            temporalOperator = exp[i - 1:exp[i:].find(']') + 1 + i]
+            operators.append(Operator(symbol = temporalOperator, type = Operator.unary, precedence = 3, associativity = Operator.rtl, position = Operator.prefix))
 
     operators = Operators(operators)
     parser = ExpressionParser(operators)
@@ -213,11 +180,6 @@ def genSynTree(exp):
     return synTree
 
 
-def convertToParseTree(synTree):
-
-    return
-
-
 def getNodeData(synTree, nodeID):
 
     return synTree[nodeID].tag
@@ -225,37 +187,18 @@ def getNodeData(synTree, nodeID):
 
 def getNodeInterval(synTree, nodeID):
 
-    tag = getNodeData(synTree, nodeID)
+    tag = synTree.get_node(nodeID).tag
     start = (tag[tag.find('[') + 1: tag.find(',')])
     end = (tag[tag.find(',') + 2: tag.find(']')])
 
     return start, end
 
 
-def randomizeID(synTree):
-
-    synNodes = synTree.all_nodes()
-    # synList = []
-
-    for i in range(len(synNodes)):
-
-        nodeString = ('{}'.format(synNodes[i]))
-        # synList.append(nodeString[nodeString.find('identifier=') + 11:nodeString.find(', data')])
-
-        # print(nodeString[nodeString.find('identifier=') + 11:nodeString.find(', data')])
-
-        nodeID = 3
-
-        print(synTree.get_node(nodeID).identifier)
-
-    print(synNodes)
-
-
 def getSubTree(synTree, nodeID):
 
     subTree = Tree()
 
-    currentID = '{}'.format(subTree.create_node(getNodeData(synTree, nodeID), random.randrange(100, 1000000)))
+    currentID = '{}'.format(subTree.create_node(synTree.get_node(nodeID).tag, random.randrange(100, 1000000)))
     currentID = int(currentID[currentID.find('identifier=') + 11:currentID.find(', data=')])
 
     def copyNodeRec(synTree, nodeID, parentID):
