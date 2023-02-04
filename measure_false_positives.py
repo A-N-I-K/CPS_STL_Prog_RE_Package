@@ -1,6 +1,7 @@
 '''
 @author: ANIK
 '''
+import sys
 
 
 def getTankData(id):
@@ -147,27 +148,52 @@ def getDroneStats(data0, data1, eps):
 
 def main():
 
-    data0 = getTankData(0)
-    data1 = getTankData(1)
+    if len(sys.argv) == 2:
+
+        epsTemp = min(10, int(float(sys.argv[1]) * 20))
+        eps = max(1, epsTemp)
+
+        data0 = getTankData(0)
+        data1 = getTankData(1)
+
+        print("Water tank false positives:\n")
+        print("Clock\tTrue\t\tDetected\tFalse\t\tFalse +ve")
+        print("Skew\tViolations\tViolations\tPositives\tPercentage\n")
+
+        getTankStats(data0, data1, eps)
+
+        data0 = getDroneData(0)
+        data1 = getDroneData(1)
+
+        print("UAV false positives:\n")
+        print("Clock\tTrue\t\tDetected\tFalse\t\tFalse +ve")
+        print("Skew\tViolations\tViolations\tPositives\tPercentage\n")
+
+        getTankStats(data0, data1, eps)
+
+    else:
+
+        data0 = getTankData(0)
+        data1 = getTankData(1)
+
+        print("Water tank false positives:\n")
+        print("Clock\tTrue\t\tDetected\tFalse\t\tFalse +ve")
+        print("Skew\tViolations\tViolations\tPositives\tPercentage\n")
+
+        for i in range(10):
+
+            getTankStats(data0, data1, i + 1)
     
-    print("Water tank false positives:\n")
-    print("Clock\tTrue\t\tDetected\tFalse\t\tFalse +ve")
-    print("Skew\tViolations\tViolations\tPositives\tPercentage\n")
+        data0 = getDroneData(0)
+        data1 = getDroneData(1)
     
-    for i in range(10):
+        print("UAV false positives:\n")
+        print("Clock\tTrue\t\tDetected\tFalse\t\tFalse +ve")
+        print("Skew\tViolations\tViolations\tPositives\tPercentage\n")
 
-        getTankStats(data0, data1, i + 1)
-
-    data0 = getDroneData(0)
-    data1 = getDroneData(1)
-
-    print("UAV false positives:\n")
-    print("Clock\tTrue\t\tDetected\tFalse\t\tFalse +ve")
-    print("Skew\tViolations\tViolations\tPositives\tPercentage\n")
+        for i in range(10):
     
-    for i in range(10):
-
-        getTankStats(data0, data1, i + 1)
+            getTankStats(data0, data1, i + 1)
 
 
 if __name__ == '__main__':

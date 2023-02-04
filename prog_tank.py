@@ -575,10 +575,10 @@ def main():
 
     if len(sys.argv) == 3:
 
-        eps = max(float(sys.argv[1]), 0.01)
-        eps = min(float(sys.argv[1]), 0.99)
-        agents = max(int(sys.argv[2]), 2)
-        agents = min(int(sys.argv[2]), 4)
+        epsTemp = max(float(sys.argv[1]), 0.01)
+        eps = min(epsTemp, 0.99)
+        agentsTemp = max(int(sys.argv[2]), 2)
+        agents = min(agentsTemp, 4)
 
         if agents == 2:
 
