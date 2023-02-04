@@ -1,10 +1,9 @@
 '''
-Created on Jan 30, 2023
-
 @author: ANIK
 '''
 
 import random
+import sys
 
 from AlgebraicExpressionParser import ExpressionParser
 from AlgebraicExpressionParser import Operator
@@ -24,7 +23,7 @@ def addNodeRec(selfID, parentID, selfVar, parentVar, synTree, expTree, qMat, qPa
 
         if expTree[selfID[0]][0] == 'G':
 
-            synTree.create_node('(ID: {}) FORALL i_{} \in {}'.format(selfID[0], selfVar[0], expTree[selfID[0]][1:]), selfID[0])
+            synTree.create_node('FORALL i_{} \in {}'.format(selfVar[0], expTree[selfID[0]][1:]), selfID[0])
 
             parentVar = selfVar[0]
             selfVar[0] += 1
@@ -35,7 +34,7 @@ def addNodeRec(selfID, parentID, selfVar, parentVar, synTree, expTree, qMat, qPa
 
         elif expTree[selfID[0]][0] == 'F':
 
-            synTree.create_node('(ID: {}) EXISTS i_{} \in {}'.format(selfID[0], selfVar[0], expTree[selfID[0]][1:]), selfID[0])
+            synTree.create_node('EXISTS i_{} \in {}'.format(selfVar[0], expTree[selfID[0]][1:]), selfID[0])
 
             parentVar = selfVar[0]
             selfVar[0] += 1
@@ -58,7 +57,7 @@ def addNodeRec(selfID, parentID, selfVar, parentVar, synTree, expTree, qMat, qPa
 
             if expTree[selfID[0]][0] == 'G':
 
-                synTree.create_node('(ID: {}) FORALL i_{} \in {}'.format(selfID[0], selfVar[0], expTree[selfID[0]][1:]), selfID[0], parent = parentID)
+                synTree.create_node('FORALL i_{} \in {}'.format(selfVar[0], expTree[selfID[0]][1:]), selfID[0], parent = parentID)
 
                 parentVar = selfVar[0]
                 selfVar[0] += 1
@@ -69,7 +68,7 @@ def addNodeRec(selfID, parentID, selfVar, parentVar, synTree, expTree, qMat, qPa
 
             elif expTree[selfID[0]][0] == 'F':
 
-                synTree.create_node('(ID: {}) EXISTS i_{} \in {}'.format(selfID[0], selfVar[0], expTree[selfID[0]][1:]), selfID[0], parent = parentID)
+                synTree.create_node('EXISTS i_{} \in {}'.format(selfVar[0], expTree[selfID[0]][1:]), selfID[0], parent = parentID)
 
                 parentVar = selfVar[0]
                 selfVar[0] += 1
@@ -90,8 +89,7 @@ def addNodeRec(selfID, parentID, selfVar, parentVar, synTree, expTree, qMat, qPa
 
             if expTree[selfID[0]][0] == 'G':
 
-                # synTree.create_node('FORALL i_{} \in {} + i_{}{} + i_{}{}'.format(selfVar[0], expTree[selfID[0]][1:expTree[selfID[0]].find(',')], parentVar, expTree[selfID[0]][expTree[selfID[0]].find(','):-1], parentVar, expTree[selfID[0]][-1]), selfID[0], parent = parentID)
-                synTree.create_node('(ID: {}) FORALL i_{} \in {} + i_{}{} + i_{}{}'.format(selfID[0], selfVar[0], expTree[selfID[0]][1:expTree[selfID[0]].find(',')], parentVar, expTree[selfID[0]][expTree[selfID[0]].find(','):-1], parentVar, expTree[selfID[0]][-1]), selfID[0], parent = parentID)
+                synTree.create_node('FORALL i_{} \in {} + i_{}{} + i_{}{}'.format(selfVar[0], expTree[selfID[0]][1:expTree[selfID[0]].find(',')], parentVar, expTree[selfID[0]][expTree[selfID[0]].find(','):-1], parentVar, expTree[selfID[0]][-1]), selfID[0], parent = parentID)
 
                 parentVar = selfVar[0]
                 selfVar[0] += 1
@@ -106,7 +104,7 @@ def addNodeRec(selfID, parentID, selfVar, parentVar, synTree, expTree, qMat, qPa
 
             elif expTree[selfID[0]][0] == 'F':
 
-                synTree.create_node('(ID: {}) EXISTS i_{} \in {} + i_{}{} + i_{}{}'.format(selfID[0], selfVar[0], expTree[selfID[0]][1:expTree[selfID[0]].find(',')], parentVar, expTree[selfID[0]][expTree[selfID[0]].find(','):-1], parentVar, expTree[selfID[0]][-1]), selfID[0], parent = parentID)
+                synTree.create_node('EXISTS i_{} \in {} + i_{}{} + i_{}{}'.format(selfVar[0], expTree[selfID[0]][1:expTree[selfID[0]].find(',')], parentVar, expTree[selfID[0]][expTree[selfID[0]].find(','):-1], parentVar, expTree[selfID[0]][-1]), selfID[0], parent = parentID)
 
                 parentVar = selfVar[0]
                 selfVar[0] += 1
@@ -170,12 +168,7 @@ def genSynTree(exp):
     selfID = [0]
     selfVar = [0]
 
-    # qMat = []
-    # qMat.append([-1])
-
     addNodeRec(selfID, 0, selfVar, -1, synTree, expTree, qMat, -1)
-
-    printMatrix(qMat)
 
     return synTree
 
@@ -216,14 +209,9 @@ def getSubTree(synTree, nodeID):
                 nodeID = '{}'.format(child)
                 nodeID = int(nodeID[nodeID.find('identifier=') + 11:nodeID.find(', data=')])
 
-                # print(synTree.all_nodes())
-                # print(nodeID, currentID)
-
                 copyNodeRec(synTree, nodeID, currentID)
 
     copyNodeRec(synTree, nodeID, currentID)
-
-    # print(subTree.all_nodes())
 
     return subTree
 
@@ -243,10 +231,7 @@ def treePartition(synTree, qMat, nodeID, time):
 
             rootID = newRoot.create_node('OR', random.randrange(100, 1000000)).identifier
 
-        # subTreeOne = getSubTree(synTree, 0)
         subTreeTwo = getSubTree(synTree, 0)
-
-        # newRoot.paste(rootID, subTreeOne)
         newRoot.paste(rootID, subTreeTwo)
 
         synTree.get_node(0).tag = '{}{})'.format(tag[:tag.find(',') + 2], time)
@@ -269,11 +254,7 @@ def treePartition(synTree, qMat, nodeID, time):
 
             if qMat[j][0] == nodeID and len(qMat[j]) > 1:
 
-                print(j, len(qMat[j]))
-
                 for i in range(len(qMat[j]) - 1):
-
-                    # print(qMat[j][i + 1])
 
                     partNode(synTree, qMat[j][i + 1], time)
                     treePartition(synTree, qMat, qMat[j][i + 1], time)
@@ -283,8 +264,6 @@ def partNode(synTree, nodeID, time):
     
     parentID = synTree.parent(nodeID).identifier
     tag = synTree.get_node(nodeID).tag
-
-    # parentNode = synTree.parent(nodeID)
     
     if 'FORALL' in tag:
 
@@ -298,10 +277,6 @@ def partNode(synTree, nodeID, time):
         
         synTree.get_node(nodeID).tag = '{}{})'.format(tag[:tag.find(',') + 2], time)
 
-        # synTree.get_node(nodeID).tag = '{}'
-
-        # synTree.show()
-
     if 'EXISTS' in tag:
 
         newParentID = synTree.create_node('OR', random.randrange(100, 1000000), parent = parentID).identifier
@@ -314,58 +289,59 @@ def partNode(synTree, nodeID, time):
 
         synTree.get_node(nodeID).tag = '{}{})'.format(tag[:tag.find(',') + 2], time)
 
-        # synTree.get_node(nodeID).tag = '{}'
-
-        # synTree.show()
-
 
 def printMatrix(qMat):
 
-    testPrint = "";
-
-    # qMat = [[1, 2], [3, 4]]
+    output = "";
 
     for i in range(len(qMat)):
 
         for j in range(len(qMat[i])):
 
-            testPrint += "{} ".format(qMat[i][j])
+            output += "{} ".format(qMat[i][j])
 
-        print(testPrint)
-        testPrint = ""
+        print(output)
+        output = ""
 
     print()
 
 
 def main():
 
-    # tr = parser.syntax_tree('(a + b) * c').preorder()
-    # exp = '(a + b) * sin(sin(c))'
-    # exp = '(a + b) * (c + d)'
-    # exp = 'G[a, b](F[a, b] A)'
-    # exp = 'F[a, b](F[a, b](G[a, b]p) AND G[a, b] !(q OR G[a, b]r))'
-    exp = 'F[0, 10](p AND G[0, 5] !q)'
-    # exp = 'F[0, 10]p'
-    
-    # tr = parser.postfix(exp)
-    # tr = parser.syntax_tree(exp).preorder()
-    #
-    # print(parser.postfix(exp))
-    # print(parser.syntax_tree(exp).preorder())
-    # print(parser.syntax_tree(exp).inorder())
-    # print(parser.syntax_tree(exp).postorder())
+    if len(sys.argv) != 3:
 
-    synTree = genSynTree(exp)
-    # synTree.show()
+        print('Missing or invalid STL formula.')
 
-    # print(getNodeInterval(synTree, 3))
+    else:
 
-    # partNode(synTree, 3, 5)
+        exp = sys.argv[1]
+        time = float(sys.argv[2])
+        valid = False
 
-    synTree = treePartition(synTree, qMat, -1, 5)
-    synTree.show()
+        synTree = genSynTree(exp)
+        print('SMT syntax tree:\n')
+        synTree.show()
 
-    # print(getNodeData(synTree, 0))
+        for i in range(len(exp)):
+
+            if exp[i] == '[':
+
+                lower = exp[i + 1:exp[i + 2:].find(',') + i + 2]
+                upper = exp[i + len(lower) + 3:exp[i + 4:].find(']') + i + 4]
+                
+                if float(lower) < time and time < float(upper):
+
+                    valid = True
+
+        if not valid:
+
+            print('This formula does not require partitioning.')
+
+        else:
+
+            synTree = treePartition(synTree, qMat, -1, time)
+            print('SMT syntax tree partitioned at time {}:\n'.format(time))
+            synTree.show()
 
     return
 

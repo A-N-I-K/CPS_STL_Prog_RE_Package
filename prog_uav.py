@@ -9,11 +9,11 @@ import time
 from z3 import *
 from z3.z3 import ForAll
 
-set_param('parallel.enable', True)
+# set_param('parallel.enable', True)
 set_option(rational_to_decimal = True)
 
 
-def prog_uav_mutual_separation(eps, sigDur, segCount):
+def prog_uav_mutual_separation(eps, sigDur, segCount, segID):
 
     # ===== VAR INIT START ===== #
 
@@ -42,8 +42,8 @@ def prog_uav_mutual_separation(eps, sigDur, segCount):
 
     # ===== READ DATA START ===== #
 
-    data_0 = getData("uav_new/1s_agent_0.txt")
-    data_1 = getData("uav_new/1s_agent_1.txt")
+    data_0 = getData("s{}_uav_0".format(segID))
+    data_1 = getData("s{}_uav_1".format(segID))
 
     i = 0
     solvers = []
@@ -109,10 +109,6 @@ def prog_uav_mutual_separation(eps, sigDur, segCount):
 
                     entryFound = False
 
-        if not entryFound:
-
-            print()
-
         i += 1
 
         # force terminate after one loop
@@ -156,14 +152,14 @@ def prog_uav_mutual_separation(eps, sigDur, segCount):
             # out = "%s %s" % (m[test], m[test2])
             # print(m)
 
-        else:
-
-            print("unsat")
+        # else:
+        #
+        #     print("unsat")
 
         s.reset()
 
 
-def prog_uav_mutual_separation_3(eps, sigDur, segCount):
+def prog_uav_mutual_separation_3(eps, sigDur, segCount, segID):
 
     # ===== VAR INIT START ===== #
 
@@ -192,9 +188,9 @@ def prog_uav_mutual_separation_3(eps, sigDur, segCount):
 
     # ===== READ DATA START ===== #
 
-    data_0 = getData("uav_new/1s_agent_0.txt")
-    data_1 = getData("uav_new/1s_agent_1.txt")
-    data_2 = getData("uav_new/1s_agent_2.txt")
+    data_0 = getData("s{}_uav_0".format(segID))
+    data_1 = getData("s{}_uav_1".format(segID))
+    data_2 = getData("s{}_uav_2".format(segID))
 
     i = 0
     solvers = []
@@ -284,10 +280,6 @@ def prog_uav_mutual_separation_3(eps, sigDur, segCount):
 
                     entryFound = False
 
-        if not entryFound:
-
-            print()
-
         i += 1
 
         # force terminate after one loop
@@ -339,14 +331,14 @@ def prog_uav_mutual_separation_3(eps, sigDur, segCount):
             # out = "%s %s" % (m[test], m[test2])
             # print(m)
 
-        else:
-
-            print("unsat")
+        # else:
+        #
+        #     print("unsat")
 
         s.reset()
 
 
-def prog_uav_mutual_separation_4(eps, sigDur, segCount):
+def prog_uav_mutual_separation_4(eps, sigDur, segCount, segID):
 
     # ===== VAR INIT START ===== #
 
@@ -375,10 +367,10 @@ def prog_uav_mutual_separation_4(eps, sigDur, segCount):
 
     # ===== READ DATA START ===== #
 
-    data_0 = getData("uav_new/1s_agent_0.txt")
-    data_1 = getData("uav_new/1s_agent_1.txt")
-    data_2 = getData("uav_new/1s_agent_2.txt")
-    data_3 = getData("uav_new/1s_agent_3.txt")
+    data_0 = getData("s{}_uav_0".format(segID))
+    data_1 = getData("s{}_uav_1".format(segID))
+    data_2 = getData("s{}_uav_2".format(segID))
+    data_3 = getData("s{}_uav_3".format(segID))
 
     i = 0
     solvers = []
@@ -492,10 +484,6 @@ def prog_uav_mutual_separation_4(eps, sigDur, segCount):
 
                     entryFound = False
 
-        if not entryFound:
-
-            print()
-
         i += 1
 
         # force terminate after one loop
@@ -557,14 +545,14 @@ def prog_uav_mutual_separation_4(eps, sigDur, segCount):
             # out = "%s %s" % (m[test], m[test2])
             # print(m)
 
-        else:
-
-            print("unsat")
+        # else:
+        #
+        #     print("unsat")
 
         s.reset()
 
 
-def prog_uav_hover(eps, sigDur, segCount):
+def prog_uav_hover(eps, sigDur, segCount, segID):
 
     # ===== VAR INIT START ===== #
 
@@ -593,8 +581,8 @@ def prog_uav_hover(eps, sigDur, segCount):
 
     # ===== READ DATA START ===== #
 
-    data_0 = getData("uav_new/1s_agent_0.txt")
-    data_1 = getData("uav_new/1s_agent_1.txt")
+    data_0 = getData("s{}_uav_0".format(segID))
+    data_1 = getData("s{}_uav_1".format(segID))
 
     i = 0
     solvers = []
@@ -654,10 +642,6 @@ def prog_uav_hover(eps, sigDur, segCount):
 
         # if segmentUpperBound ==
 
-        if not entryFound:
-
-            print()
-
         i += 1
 
         # force terminate after one loop
@@ -693,43 +677,33 @@ def prog_uav_hover(eps, sigDur, segCount):
         # s.add(And([(c_flow(i) == (drone0_z(c0(i)) + drone1_z(c1(i)))) for i in range(timestamps0[0], timestamps0[-1] + 1)]))
 
         # violation check (1s, 2s)
+        if segID == 1 or segID == 2:
 
-        v = Real('v')
-        s.add(And(v >= timestamps0[0], v <= timestamps0[-1]))
+            v = Real('v')
+            s.add(And(v >= timestamps0[0], v <= timestamps0[-1]))
 
-        s.add(z3Interpolate(c_flow, v) > 0)
+            s.add(z3Interpolate(c_flow, v) > 0)
 
         # violation check (2s)
+        if segID == 2:
 
-        # w = Real('w')
-        # s.add(And(w > v, w <= timestamps0[-1]))
-        #
-        # s.add(ForAll(w, Implies(And(w >= v, w <= timestamps0[-1]), z3Interpolate(c_flow, w) <= 10)))
+            w = Real('w')
+            s.add(And(w > v, w <= timestamps0[-1]))
+
+            s.add(ForAll(w, Implies(And(w >= v, w <= timestamps0[-1]), z3Interpolate(c_flow, w) <= 10)))
 
         # violation check (3s, 4s, 5s)
+        if segID == 3 or segID == 4 or segID == 5:
 
-        # u = Real('u')
-        # s.add(And(u >= timestamps0[0], u <= timestamps0[-1]))
-        #
-        # s.add(ForAll(u, Implies(And(u >= timestamps0[0], u <= timestamps0[-1]), z3Interpolate(c_flow, u) <= 10)))
+            u = Real('u')
+            s.add(And(u >= timestamps0[0], u <= timestamps0[-1]))
+
+            s.add(ForAll(u, Implies(And(u >= timestamps0[0], u <= timestamps0[-1]), z3Interpolate(c_flow, u) <= 10)))
 
         # s.add(z3Interpolate(c_flow, v) == 15)
         # s.add(v == 10)
 
         # ===== HOVER END ===== #
-
-        # # ===== LAND START ===== #
-        #
-        # # land
-        # s.add(And([c_flow(i) == (drone0_z(c0(i)) + drone1_z(c1(i))) for i in range(timestamps0[0], timestamps0[-1] + 1)]))
-        #
-        # # violation check
-        # v = Real('v')
-        # s.add(And(v >= timestamps0[0], v <= timestamps0[-1]))
-        #
-        # s.add(z3Interpolate(c_flow, v) == 0)
-        #
-        # # ===== LAND END ===== #
 
         # ===== TEST SMT END ===== #
 
@@ -739,14 +713,14 @@ def prog_uav_hover(eps, sigDur, segCount):
             # out = "%s %s" % (m[test], m[test2])
             # print(m[v])
 
-        else:
-
-            print("unsat")
+        # else:
+        #
+        #     print("unsat")
 
         s.reset()
 
 
-def prog_uav_hover_3(eps, sigDur, segCount):
+def prog_uav_hover_3(eps, sigDur, segCount, segID):
 
     # ===== VAR INIT START ===== #
 
@@ -775,9 +749,9 @@ def prog_uav_hover_3(eps, sigDur, segCount):
 
     # ===== READ DATA START ===== #
 
-    data_0 = getData("uav_new/1s_agent_0.txt")
-    data_1 = getData("uav_new/1s_agent_1.txt")
-    data_2 = getData("uav_new/1s_agent_2.txt")
+    data_0 = getData("s{}_uav_0".format(segID))
+    data_1 = getData("s{}_uav_1".format(segID))
+    data_2 = getData("s{}_uav_2".format(segID))
 
     i = 0
     solvers = []
@@ -857,10 +831,6 @@ def prog_uav_hover_3(eps, sigDur, segCount):
 
         # if segmentUpperBound ==
 
-        if not entryFound:
-
-            print()
-
         i += 1
 
         # force terminate after one loop
@@ -910,37 +880,34 @@ def prog_uav_hover_3(eps, sigDur, segCount):
 
         s.add(z3Interpolate(c_flow, v) > 0)
 
-        # violation check (2s)
+        # violation check (1s, 2s)
+        if segID == 1 or segID == 2:
 
-        # w = Real('w')
-        # s.add(And(w > v, w <= timestamps0[-1]))
-        #
-        # s.add(ForAll(w, Implies(And(w >= v, w <= timestamps0[-1]), z3Interpolate(c_flow, w) <= 10)))
+            v = Real('v')
+            s.add(And(v >= timestamps0[0], v <= timestamps0[-1]))
+
+            s.add(z3Interpolate(c_flow, v) > 0)
+
+        # violation check (2s)
+        if segID == 2:
+
+            w = Real('w')
+            s.add(And(w > v, w <= timestamps0[-1]))
+
+            s.add(ForAll(w, Implies(And(w >= v, w <= timestamps0[-1]), z3Interpolate(c_flow, w) <= 10)))
 
         # violation check (3s, 4s, 5s)
+        if segID == 3 or segID == 4 or segID == 5:
 
-        # u = Real('u')
-        # s.add(And(u >= timestamps0[0], u <= timestamps0[-1]))
-        #
-        # s.add(ForAll(u, Implies(And(u >= timestamps0[0], u <= timestamps0[-1]), z3Interpolate(c_flow, u) <= 10)))
+            u = Real('u')
+            s.add(And(u >= timestamps0[0], u <= timestamps0[-1]))
+
+            s.add(ForAll(u, Implies(And(u >= timestamps0[0], u <= timestamps0[-1]), z3Interpolate(c_flow, u) <= 10)))
 
         # s.add(z3Interpolate(c_flow, v) == 15)
         # s.add(v == 10)
 
         # ===== HOVER END ===== #
-
-        # # ===== LAND START ===== #
-        #
-        # # land
-        # s.add(And([c_flow(i) == (drone0_z(c0(i)) + drone1_z(c1(i))) for i in range(timestamps0[0], timestamps0[-1] + 1)]))
-        #
-        # # violation check
-        # v = Real('v')
-        # s.add(And(v >= timestamps0[0], v <= timestamps0[-1]))
-        #
-        # s.add(z3Interpolate(c_flow, v) == 0)
-        #
-        # # ===== LAND END ===== #
 
         # ===== TEST SMT END ===== #
 
@@ -950,14 +917,14 @@ def prog_uav_hover_3(eps, sigDur, segCount):
             # out = "%s %s" % (m[test], m[test2])
             # print(m[v])
 
-        else:
-
-            print("unsat")
+        # else:
+        #
+        #     print("unsat")
 
         s.reset()
 
 
-def prog_uav_hover_4(eps, sigDur, segCount):
+def prog_uav_hover_4(eps, sigDur, segCount, segID):
 
     # ===== VAR INIT START ===== #
 
@@ -986,10 +953,10 @@ def prog_uav_hover_4(eps, sigDur, segCount):
 
     # ===== READ DATA START ===== #
 
-    data_0 = getData("uav_new/1s_agent_0.txt")
-    data_1 = getData("uav_new/1s_agent_1.txt")
-    data_2 = getData("uav_new/1s_agent_2.txt")
-    data_3 = getData("uav_new/1s_agent_3.txt")
+    data_0 = getData("s{}_uav_0".format(segID))
+    data_1 = getData("s{}_uav_1".format(segID))
+    data_2 = getData("s{}_uav_2".format(segID))
+    data_3 = getData("s{}_uav_3".format(segID))
 
     i = 0
     solvers = []
@@ -1089,10 +1056,6 @@ def prog_uav_hover_4(eps, sigDur, segCount):
 
         # if segmentUpperBound ==
 
-        if not entryFound:
-
-            print()
-
         i += 1
 
         # force terminate after one loop
@@ -1152,37 +1115,34 @@ def prog_uav_hover_4(eps, sigDur, segCount):
 
         s.add(z3Interpolate(c_flow, v) > 0)
 
-        # violation check (2s)
+        # violation check (1s, 2s)
+        if segID == 1 or segID == 2:
 
-        # w = Real('w')
-        # s.add(And(w > v, w <= timestamps0[-1]))
-        #
-        # s.add(ForAll(w, Implies(And(w >= v, w <= timestamps0[-1]), z3Interpolate(c_flow, w) <= 10)))
+            v = Real('v')
+            s.add(And(v >= timestamps0[0], v <= timestamps0[-1]))
+
+            s.add(z3Interpolate(c_flow, v) > 0)
+
+        # violation check (2s)
+        if segID == 2:
+
+            w = Real('w')
+            s.add(And(w > v, w <= timestamps0[-1]))
+
+            s.add(ForAll(w, Implies(And(w >= v, w <= timestamps0[-1]), z3Interpolate(c_flow, w) <= 10)))
 
         # violation check (3s, 4s, 5s)
+        if segID == 3 or segID == 4 or segID == 5:
 
-        # u = Real('u')
-        # s.add(And(u >= timestamps0[0], u <= timestamps0[-1]))
-        #
-        # s.add(ForAll(u, Implies(And(u >= timestamps0[0], u <= timestamps0[-1]), z3Interpolate(c_flow, u) <= 10)))
+            u = Real('u')
+            s.add(And(u >= timestamps0[0], u <= timestamps0[-1]))
+
+            s.add(ForAll(u, Implies(And(u >= timestamps0[0], u <= timestamps0[-1]), z3Interpolate(c_flow, u) <= 10)))
 
         # s.add(z3Interpolate(c_flow, v) == 15)
         # s.add(v == 10)
 
         # ===== HOVER END ===== #
-
-        # # ===== LAND START ===== #
-        #
-        # # land
-        # s.add(And([c_flow(i) == (drone0_z(c0(i)) + drone1_z(c1(i))) for i in range(timestamps0[0], timestamps0[-1] + 1)]))
-        #
-        # # violation check
-        # v = Real('v')
-        # s.add(And(v >= timestamps0[0], v <= timestamps0[-1]))
-        #
-        # s.add(z3Interpolate(c_flow, v) == 0)
-        #
-        # # ===== LAND END ===== #
 
         # ===== TEST SMT END ===== #
 
@@ -1192,16 +1152,533 @@ def prog_uav_hover_4(eps, sigDur, segCount):
             # out = "%s %s" % (m[test], m[test2])
             # print(m[v])
 
-        else:
+        # else:
+        #
+        #     print("unsat")
 
-            print("unsat")
+        s.reset()
+
+
+def prog_uav_land(eps, sigDur, segCount, segID):
+
+    # ===== VAR INIT START ===== #
+
+    t0 = 0.00  # First time-stamp on agent that is to be re-timed
+    t1 = 0.05  # Second time-stamp on agent that is to be re-timed
+
+    if sigDur / segCount < t1:
+
+        segCount = sigDur / t1
+
+    if t0 != 0:
+
+        return
+
+    segmentDuration = sigDur / segCount
+    delta = 0
+    nSAT = 1  # Number of SAT assignments the solver will display per segment; set to -1 for allSAT
+
+    # multiplier adjustments
+    multiplier = 1 / t1
+    eps *= multiplier
+    segmentDuration *= multiplier
+    sigDur *= multiplier
+
+    # ===== VAR INIT END ===== #
+
+    # ===== READ DATA START ===== #
+
+    data_0 = getData("s{}_uav_0".format(segID))
+    data_1 = getData("s{}_uav_1".format(segID))
+
+    i = 0
+    solvers = []
+    entryFound = True
+
+    while(entryFound):
+
+        # Flag to be set True if at least one entry is found in the current iteration
+        entryFound = False
+
+        # Initialize solver
+        s = Solver()
+
+        # Calculate upper and lower time bound for current segment
+        segmentLowerBound = int((i * segmentDuration) - eps)
+        segmentUpperBound = int((i + 1) * segmentDuration)
+
+        timestamps0 = []
+
+        drone0_z = Function('drone0_z', IntSort(), RealSort())
+
+        for j in range ((segmentLowerBound + 0), (segmentUpperBound + 1)):
+
+            if(j >= 0 and j < len(data_0)):
+
+                timestamps0.append(int(data_0[j][0] * multiplier))
+
+                s.add(drone0_z(int(data_0[j][0] * multiplier)) == data_0[j][3])
+
+                if(int(data_0[j][0] * multiplier) > (i * segmentDuration)):
+
+                    entryFound = True
+
+                if data_0[j][0] * multiplier == sigDur:
+
+                    entryFound = False
+
+        timestamps1 = []
+
+        drone1_z = Function('drone1_z', IntSort(), RealSort())
+
+        for j in range ((segmentLowerBound + 0), (segmentUpperBound + 1)):
+
+            if(j >= 0 and j < len(data_1)):
+
+                timestamps1.append(int(data_1[j][0] * multiplier))
+
+                s.add(drone1_z(int(data_1[j][0] * multiplier)) == data_1[j][3])
+
+                if(int(data_1[j][0] * multiplier) > (i * segmentDuration)):
+
+                    entryFound = True
+
+                if data_1[j][0] * multiplier == sigDur:
+
+                    entryFound = False
+
+        # if segmentUpperBound ==
+
+        i += 1
+
+        # force terminate after one loop
+        entryFound = False
+
+        # ===== READ DATA END ===== #
+
+        # ===== CONCUT FLOW START ===== #
+
+        # global clock to local clock mappings
+        c0 = Function('c0', IntSort(), IntSort())
+        s.add(And([Or([c0(i) == ((i - eps) + j) for j in range(2 * int(eps) + 1)]) for i in range(timestamps0[0], timestamps0[-1] + 1)]))
+        s.add(Not(Or(c0(timestamps0[0]) == timestamps0[0] - 1, c0(timestamps0[-1]) == timestamps0[-1] + 1)))
+
+        c1 = Function('c1', IntSort(), IntSort())
+        s.add(And([Or([c1(i) == ((i - eps) + j) for j in range(2 * int(eps) + 1)]) for i in range(timestamps1[0], timestamps1[-1] + 1)]))
+        s.add(Not(Or(c1(timestamps1[0]) == timestamps1[0] - 1, c1(timestamps1[-1]) == timestamps1[-1] + 1)))
+
+        # local clocks are bound by epsilon
+        s.add(And([And(c0(i) - c1(i) <= eps, c0(i) - c1(i) >= -eps) for i in range(timestamps0[0], timestamps0[-1] + 1)]))
+
+        # global clock to local clock mappings are ordered
+        s.add(And([And([Implies(i <= j, And(c0(i) <= c0(j), c1(i) <= c1(j))) for j in range(timestamps0[0], timestamps0[-1] + 1)]) for i in range(timestamps0[0], timestamps0[-1] + 1)]))
+
+        # consistent cut flow
+        c_flow = Function('c_flow', IntSort(), RealSort())
+        # c_flow = Function('c_flow', IntSort(), IntSort())
+
+        # ===== LAND START ===== #
+
+        s.add(And([c_flow(i) == (drone0_z(c0(i)) + drone1_z(c1(i))) for i in range(timestamps0[0], timestamps0[-1] + 1)]))
+
+        # violation check
+        v = Real('v')
+        s.add(And(v >= timestamps0[0], v <= timestamps0[-1]))
+
+        s.add(z3Interpolate(c_flow, v) == 0)
+
+        # ===== LAND END ===== #
+
+        # ===== TEST SMT END ===== #
+
+        if s.check() == sat:
+
+            m = s.model()
+            # out = "%s %s" % (m[test], m[test2])
+            # print(m[v])
+
+        # else:
+        #
+        #     print("unsat")
+
+        s.reset()
+
+
+def prog_uav_land_3(eps, sigDur, segCount, segID):
+
+    # ===== VAR INIT START ===== #
+
+    t0 = 0.00  # First time-stamp on agent that is to be re-timed
+    t1 = 0.05  # Second time-stamp on agent that is to be re-timed
+
+    if sigDur / segCount < t1:
+
+        segCount = sigDur / t1
+
+    if t0 != 0:
+
+        return
+
+    segmentDuration = sigDur / segCount
+    delta = 0
+    nSAT = 1  # Number of SAT assignments the solver will display per segment; set to -1 for allSAT
+
+    # multiplier adjustments
+    multiplier = 1 / t1
+    eps *= multiplier
+    segmentDuration *= multiplier
+    sigDur *= multiplier
+
+    # ===== VAR INIT END ===== #
+
+    # ===== READ DATA START ===== #
+
+    data_0 = getData("s{}_uav_0".format(segID))
+    data_1 = getData("s{}_uav_1".format(segID))
+    data_2 = getData("s{}_uav_2".format(segID))
+
+    i = 0
+    solvers = []
+    entryFound = True
+
+    while(entryFound):
+
+        # Flag to be set True if at least one entry is found in the current iteration
+        entryFound = False
+
+        # Initialize solver
+        s = Solver()
+
+        # Calculate upper and lower time bound for current segment
+        segmentLowerBound = int((i * segmentDuration) - eps)
+        segmentUpperBound = int((i + 1) * segmentDuration)
+
+        timestamps0 = []
+
+        drone0_z = Function('drone0_z', IntSort(), RealSort())
+
+        for j in range ((segmentLowerBound + 0), (segmentUpperBound + 1)):
+
+            if(j >= 0 and j < len(data_0)):
+
+                timestamps0.append(int(data_0[j][0] * multiplier))
+
+                s.add(drone0_z(int(data_0[j][0] * multiplier)) == data_0[j][3])
+
+                if(int(data_0[j][0] * multiplier) > (i * segmentDuration)):
+
+                    entryFound = True
+
+                if data_0[j][0] * multiplier == sigDur:
+
+                    entryFound = False
+
+        timestamps1 = []
+
+        drone1_z = Function('drone1_z', IntSort(), RealSort())
+
+        for j in range ((segmentLowerBound + 0), (segmentUpperBound + 1)):
+
+            if(j >= 0 and j < len(data_1)):
+
+                timestamps1.append(int(data_1[j][0] * multiplier))
+
+                s.add(drone1_z(int(data_1[j][0] * multiplier)) == data_1[j][3])
+
+                if(int(data_1[j][0] * multiplier) > (i * segmentDuration)):
+
+                    entryFound = True
+
+                if data_1[j][0] * multiplier == sigDur:
+
+                    entryFound = False
+
+        timestamps2 = []
+
+        drone2_z = Function('drone2_z', IntSort(), RealSort())
+
+        for j in range ((segmentLowerBound + 0), (segmentUpperBound + 1)):
+
+            if(j >= 0 and j < len(data_2)):
+
+                timestamps2.append(int(data_2[j][0] * multiplier))
+
+                s.add(drone2_z(int(data_2[j][0] * multiplier)) == data_2[j][3])
+
+                if(int(data_2[j][0] * multiplier) > (i * segmentDuration)):
+
+                    entryFound = True
+
+                if data_2[j][0] * multiplier == sigDur:
+
+                    entryFound = False
+
+        # if segmentUpperBound ==
+
+        i += 1
+
+        # force terminate after one loop
+        entryFound = False
+
+        # ===== READ DATA END ===== #
+
+        # ===== CONCUT FLOW START ===== #
+
+        # global clock to local clock mappings
+        c0 = Function('c0', IntSort(), IntSort())
+        s.add(And([Or([c0(i) == ((i - eps) + j) for j in range(2 * int(eps) + 1)]) for i in range(timestamps0[0], timestamps0[-1] + 1)]))
+        s.add(Not(Or(c0(timestamps0[0]) == timestamps0[0] - 1, c0(timestamps0[-1]) == timestamps0[-1] + 1)))
+
+        c1 = Function('c1', IntSort(), IntSort())
+        s.add(And([Or([c1(i) == ((i - eps) + j) for j in range(2 * int(eps) + 1)]) for i in range(timestamps1[0], timestamps1[-1] + 1)]))
+        s.add(Not(Or(c1(timestamps1[0]) == timestamps1[0] - 1, c1(timestamps1[-1]) == timestamps1[-1] + 1)))
+
+        c2 = Function('c2', IntSort(), IntSort())
+        s.add(And([Or([c2(i) == ((i - eps) + j) for j in range(2 * int(eps) + 1)]) for i in range(timestamps2[0], timestamps2[-1] + 1)]))
+        s.add(Not(Or(c2(timestamps2[0]) == timestamps2[0] - 1, c2(timestamps2[-1]) == timestamps2[-1] + 1)))
+
+        # local clocks are bound by epsilon
+        s.add(And([And(c0(i) - c1(i) <= eps, c0(i) - c1(i) >= -eps) for i in range(timestamps0[0], timestamps0[-1] + 1)]))
+        s.add(And([And(c1(i) - c2(i) <= eps, c1(i) - c2(i) >= -eps) for i in range(timestamps1[0], timestamps1[-1] + 1)]))
+        s.add(And([And(c2(i) - c0(i) <= eps, c2(i) - c0(i) >= -eps) for i in range(timestamps2[0], timestamps2[-1] + 1)]))
+
+        # global clock to local clock mappings are ordered
+        s.add(And([And([Implies(i <= j, And(c0(i) <= c0(j), c1(i) <= c1(j), c2(i) <= c2(j))) for j in range(timestamps0[0], timestamps0[-1] + 1)]) for i in range(timestamps0[0], timestamps0[-1] + 1)]))
+
+        # consistent cut flow
+        c_flow = Function('c_flow', IntSort(), RealSort())
+        # c_flow = Function('c_flow', IntSort(), IntSort())
+
+        # ===== LAND START ===== #
+
+        s.add(And([c_flow(i) == (drone0_z(c0(i)) + drone1_z(c1(i)) + drone2_z(c1(i))) for i in range(timestamps0[0], timestamps0[-1] + 1)]))
+
+        # violation check
+        v = Real('v')
+        s.add(And(v >= timestamps0[0], v <= timestamps0[-1]))
+
+        s.add(z3Interpolate(c_flow, v) == 0)
+
+        # ===== LAND END ===== #
+
+        # ===== TEST SMT END ===== #
+
+        if s.check() == sat:
+
+            m = s.model()
+            # out = "%s %s" % (m[test], m[test2])
+            # print(m[v])
+
+        # else:
+        #
+        #     print("unsat")
+
+        s.reset()
+
+
+def prog_uav_land_4(eps, sigDur, segCount, segID):
+
+    # ===== VAR INIT START ===== #
+
+    t0 = 0.00  # First time-stamp on agent that is to be re-timed
+    t1 = 0.05  # Second time-stamp on agent that is to be re-timed
+
+    if sigDur / segCount < t1:
+
+        segCount = sigDur / t1
+
+    if t0 != 0:
+
+        return
+
+    segmentDuration = sigDur / segCount
+    delta = 0
+    nSAT = 1  # Number of SAT assignments the solver will display per segment; set to -1 for allSAT
+
+    # multiplier adjustments
+    multiplier = 1 / t1
+    eps *= multiplier
+    segmentDuration *= multiplier
+    sigDur *= multiplier
+
+    # ===== VAR INIT END ===== #
+
+    # ===== READ DATA START ===== #
+
+    data_0 = getData("s{}_uav_0".format(segID))
+    data_1 = getData("s{}_uav_1".format(segID))
+    data_2 = getData("s{}_uav_2".format(segID))
+    data_3 = getData("s{}_uav_3".format(segID))
+
+    i = 0
+    solvers = []
+    entryFound = True
+
+    while(entryFound):
+
+        # Flag to be set True if at least one entry is found in the current iteration
+        entryFound = False
+
+        # Initialize solver
+        s = Solver()
+
+        # Calculate upper and lower time bound for current segment
+        segmentLowerBound = int((i * segmentDuration) - eps)
+        segmentUpperBound = int((i + 1) * segmentDuration)
+
+        timestamps0 = []
+
+        drone0_z = Function('drone0_z', IntSort(), RealSort())
+
+        for j in range ((segmentLowerBound + 0), (segmentUpperBound + 1)):
+
+            if(j >= 0 and j < len(data_0)):
+
+                timestamps0.append(int(data_0[j][0] * multiplier))
+
+                s.add(drone0_z(int(data_0[j][0] * multiplier)) == data_0[j][3])
+
+                if(int(data_0[j][0] * multiplier) > (i * segmentDuration)):
+
+                    entryFound = True
+
+                if data_0[j][0] * multiplier == sigDur:
+
+                    entryFound = False
+
+        timestamps1 = []
+
+        drone1_z = Function('drone1_z', IntSort(), RealSort())
+
+        for j in range ((segmentLowerBound + 0), (segmentUpperBound + 1)):
+
+            if(j >= 0 and j < len(data_1)):
+
+                timestamps1.append(int(data_1[j][0] * multiplier))
+
+                s.add(drone1_z(int(data_1[j][0] * multiplier)) == data_1[j][3])
+
+                if(int(data_1[j][0] * multiplier) > (i * segmentDuration)):
+
+                    entryFound = True
+
+                if data_1[j][0] * multiplier == sigDur:
+
+                    entryFound = False
+
+        timestamps2 = []
+
+        drone2_z = Function('drone2_z', IntSort(), RealSort())
+
+        for j in range ((segmentLowerBound + 0), (segmentUpperBound + 1)):
+
+            if(j >= 0 and j < len(data_2)):
+
+                timestamps2.append(int(data_2[j][0] * multiplier))
+
+                s.add(drone2_z(int(data_2[j][0] * multiplier)) == data_2[j][3])
+
+                if(int(data_2[j][0] * multiplier) > (i * segmentDuration)):
+
+                    entryFound = True
+
+                if data_2[j][0] * multiplier == sigDur:
+
+                    entryFound = False
+
+        timestamps3 = []
+
+        drone3_z = Function('drone3_z', IntSort(), RealSort())
+
+        for j in range ((segmentLowerBound + 0), (segmentUpperBound + 1)):
+
+            if(j >= 0 and j < len(data_3)):
+
+                timestamps3.append(int(data_3[j][0] * multiplier))
+
+                s.add(drone3_z(int(data_3[j][0] * multiplier)) == data_3[j][3])
+
+                if(int(data_3[j][0] * multiplier) > (i * segmentDuration)):
+
+                    entryFound = True
+
+                if data_3[j][0] * multiplier == sigDur:
+
+                    entryFound = False
+
+        # if segmentUpperBound ==
+
+        i += 1
+
+        # force terminate after one loop
+        entryFound = False
+
+        # ===== READ DATA END ===== #
+
+        # ===== CONCUT FLOW START ===== #
+
+        # global clock to local clock mappings
+        c0 = Function('c0', IntSort(), IntSort())
+        s.add(And([Or([c0(i) == ((i - eps) + j) for j in range(2 * int(eps) + 1)]) for i in range(timestamps0[0], timestamps0[-1] + 1)]))
+        s.add(Not(Or(c0(timestamps0[0]) == timestamps0[0] - 1, c0(timestamps0[-1]) == timestamps0[-1] + 1)))
+
+        c1 = Function('c1', IntSort(), IntSort())
+        s.add(And([Or([c1(i) == ((i - eps) + j) for j in range(2 * int(eps) + 1)]) for i in range(timestamps1[0], timestamps1[-1] + 1)]))
+        s.add(Not(Or(c1(timestamps1[0]) == timestamps1[0] - 1, c1(timestamps1[-1]) == timestamps1[-1] + 1)))
+
+        c2 = Function('c2', IntSort(), IntSort())
+        s.add(And([Or([c2(i) == ((i - eps) + j) for j in range(2 * int(eps) + 1)]) for i in range(timestamps2[0], timestamps2[-1] + 1)]))
+        s.add(Not(Or(c2(timestamps2[0]) == timestamps2[0] - 1, c2(timestamps2[-1]) == timestamps2[-1] + 1)))
+
+        c3 = Function('c3', IntSort(), IntSort())
+        s.add(And([Or([c3(i) == ((i - eps) + j) for j in range(2 * int(eps) + 1)]) for i in range(timestamps3[0], timestamps3[-1] + 1)]))
+        s.add(Not(Or(c3(timestamps3[0]) == timestamps3[0] - 1, c3(timestamps3[-1]) == timestamps3[-1] + 1)))
+
+        # local clocks are bound by epsilon
+        s.add(And([And(c0(i) - c1(i) <= eps, c0(i) - c1(i) >= -eps) for i in range(timestamps0[0], timestamps0[-1] + 1)]))
+        s.add(And([And(c0(i) - c2(i) <= eps, c0(i) - c2(i) >= -eps) for i in range(timestamps0[0], timestamps0[-1] + 1)]))
+        s.add(And([And(c0(i) - c3(i) <= eps, c0(i) - c3(i) >= -eps) for i in range(timestamps0[0], timestamps0[-1] + 1)]))
+        s.add(And([And(c1(i) - c2(i) <= eps, c1(i) - c2(i) >= -eps) for i in range(timestamps1[0], timestamps1[-1] + 1)]))
+        s.add(And([And(c1(i) - c3(i) <= eps, c1(i) - c3(i) >= -eps) for i in range(timestamps1[0], timestamps1[-1] + 1)]))
+        s.add(And([And(c2(i) - c3(i) <= eps, c2(i) - c3(i) >= -eps) for i in range(timestamps2[0], timestamps2[-1] + 1)]))
+
+        # global clock to local clock mappings are ordered
+        s.add(And([And([Implies(i <= j, And(c0(i) <= c0(j), c1(i) <= c1(j), c2(i) <= c2(j), c3(i) <= c3(j))) for j in range(timestamps0[0], timestamps0[-1] + 1)]) for i in range(timestamps0[0], timestamps0[-1] + 1)]))
+
+        # consistent cut flow
+        c_flow = Function('c_flow', IntSort(), RealSort())
+        # c_flow = Function('c_flow', IntSort(), IntSort())
+
+        # ===== LAND START ===== #
+
+        s.add(And([c_flow(i) == (drone0_z(c0(i)) + drone1_z(c1(i)) + drone2_z(c1(i)) + drone3_z(c1(i))) for i in range(timestamps0[0], timestamps0[-1] + 1)]))
+
+        # violation check
+        v = Real('v')
+        s.add(And(v >= timestamps0[0], v <= timestamps0[-1]))
+
+        s.add(z3Interpolate(c_flow, v) == 0)
+
+        # ===== LAND END ===== #
+
+        # ===== TEST SMT END ===== #
+
+        if s.check() == sat:
+
+            m = s.model()
+            # out = "%s %s" % (m[test], m[test2])
+            # print(m[v])
+
+        # else:
+        #
+        #     print("unsat")
 
         s.reset()
 
 
 def getData(agent_ID):
 
-    file = open('agents_data/{}'.format(agent_ID))
+    file = open('data/uav/{}'.format(agent_ID))
     line = file.readline()
 
     data = []
@@ -1253,29 +1730,236 @@ def z3SqDist1d(x1, x2):
 
 
 def main():
+    
+    repeat = 2
+    eps = 0.05
+    
+    agents2 = True
+    agents3 = True
+    agents4 = True
 
-    repeat = 10
-    total_time = 0
+    if len(sys.argv) == 3:
 
-    for i in range(repeat):
+        eps = max(float(sys.argv[1]), 0.01)
+        eps = min(float(sys.argv[1]), 0.99)
+        agents = max(int(sys.argv[2]), 2)
+        agents = min(int(sys.argv[2]), 4)
+        
+        if agents == 2:
+            
+            agents3 = False
+            agents4 = False
+            
+        if agents == 3:
+            
+            agents2 = False
+            agents4 = False
+            
+        if agents == 4:
+            
+            agents2 = False
+            agents3 = False
 
-        start = time.time()
-        # prog_uav_mutual_separation(0.05, 1, 1)
-        # prog_uav_mutual_separation_3(0.05, 1, 1)
-        # prog_uav_mutual_separation_4(0.05, 1, 1)
-        # prog_uav_hover(0.05, 1, 1)
-        prog_uav_hover_3(0.05, 1, 1)
-        # prog_uav_hover_4(0.05, 1, 1)
-        # prog_tanks_pressure(0.05, 1, 1)
-        # prog_tanks_pressure_three(0.05, 5, 1)
-        # prog_tanks_pressure_four(0.05, 1, 1)
-        end = time.time()
-        # print("\nTime elapsed :", (end - start), "seconds")
-        dur = end - start
-        print(i, "\t:\t", dur)
-        total_time += dur
+    print("Reproducing experiments...\n")
 
-    print("\nAverage :\t", total_time / repeat)
+    print("Mutual separation:\n")
+
+    print("\t\t Segment 1\t\t Segment 2\t\t Segment 3\t\t Segment 4\t\t Segment 5", end = " ")
+    
+    if agents2:
+
+        print("\n\n2 Agents\t", end = " ")
+    
+        for i in range(5):
+    
+            total_time = 0
+    
+            for j in range(repeat):
+    
+                start = time.time()
+                prog_uav_mutual_separation(eps, 1, 1, i + 1)
+                end = time.time()
+                dur = end - start
+                total_time += dur
+    
+            print("{}\t".format(total_time / repeat), end = " ")
+
+    if agents3:
+    
+        print("\n\n3 Agents\t", end = " ")
+    
+        for i in range(5):
+    
+            total_time = 0
+    
+            for j in range(repeat):
+    
+                start = time.time()
+                prog_uav_mutual_separation_3(eps, 1, 1, i + 1)
+                end = time.time()
+                dur = end - start
+                total_time += dur
+    
+            print("{}\t".format(total_time / repeat), end = " ")
+            
+    if agents4:
+
+        print("\n\n4 Agents\t", end = " ")
+    
+        for i in range(5):
+    
+            total_time = 0
+    
+            for j in range(repeat):
+    
+                start = time.time()
+                prog_uav_mutual_separation_4(eps, 1, 1, i + 1)
+                end = time.time()
+                dur = end - start
+                total_time += dur
+    
+            print("{}\t".format(total_time / repeat), end = " ")
+
+    print("\n\nEventually hover:\n")
+
+    print("\t\t Segment 1\t\t Segment 2\t\t Segment 3\t\t Segment 4\t\t Segment 5", end = " ")
+    
+    if agents2:
+
+        print("\n\n2 Agents\t", end = " ")
+    
+        for i in range(5):
+    
+            total_time = 0
+    
+            for j in range(repeat):
+    
+                start = time.time()
+                prog_uav_hover(eps, 1, 1, i + 1)
+                end = time.time()
+                dur = end - start
+                total_time += dur
+    
+            print("{}\t".format(total_time / repeat), end = " ")
+            
+    if agents3:
+
+        print("\n\n3 Agents\t", end = " ")
+    
+        for i in range(5):
+    
+            total_time = 0
+    
+            for j in range(repeat):
+    
+                start = time.time()
+                prog_uav_hover_3(eps, 1, 1, i + 1)
+                end = time.time()
+                dur = end - start
+                total_time += dur
+    
+            print("{}\t".format(total_time / repeat), end = " ")
+            
+    if agents4:
+
+        print("\n\n4 Agents\t", end = " ")
+    
+        for i in range(5):
+    
+            total_time = 0
+    
+            for j in range(repeat):
+    
+                start = time.time()
+                prog_uav_hover_4(eps, 1, 1, i + 1)
+                end = time.time()
+                dur = end - start
+                total_time += dur
+    
+            print("{}\t".format(total_time / repeat), end = " ")
+
+    print("\n\nEventually land:\n")
+
+    print("\t\t Segment 1\t\t Segment 2\t\t Segment 3\t\t Segment 4\t\t Segment 5", end = " ")
+    
+    if agents2:
+
+        print("\n\n2 Agents\t", end = " ")
+    
+        for i in range(5):
+    
+            total_time = 0
+    
+            for j in range(repeat):
+    
+                start = time.time()
+                prog_uav_land(eps, 1, 1, i + 1)
+                end = time.time()
+                dur = end - start
+                total_time += dur
+    
+            print("{}\t".format(total_time / repeat), end = " ")
+            
+    if agents3:
+
+        print("\n\n3 Agents\t", end = " ")
+
+        for i in range(5):
+    
+            total_time = 0
+    
+            for j in range(repeat):
+    
+                start = time.time()
+                prog_uav_land_3(eps, 1, 1, i + 1)
+                end = time.time()
+                dur = end - start
+                total_time += dur
+    
+            print("{}\t".format(total_time / repeat), end = " ")
+            
+    if agents4:
+
+        print("\n\n4 Agents\t", end = " ")
+    
+        for i in range(5):
+    
+            total_time = 0
+    
+            for j in range(repeat):
+    
+                start = time.time()
+                prog_uav_land_4(eps, 1, 1, i + 1)
+                end = time.time()
+                dur = end - start
+                total_time += dur
+    
+            print("{}\t".format(total_time / repeat), end = " ")
+
+    # repeat = 10
+    # total_time = 0
+
+    # for j in range(5):
+    #
+    #     for i in range(repeat):
+    #
+    #         start = time.time()
+    #         # prog_uav_mutual_separation(0.05, 1, 1, 1)
+    #         # prog_uav_mutual_separation_3(0.05, 1, 1)
+    #         # prog_uav_mutual_separation_4(0.05, 1, 1)
+    #         prog_uav_hover(0.05, 1, 1, j + 1)
+    #         # prog_uav_hover_3(0.05, 1, 1)
+    #         # prog_uav_hover_4(0.05, 1, 1)
+    #         # prog_tanks_pressure(0.05, 1, 1)
+    #         # prog_tanks_pressure_three(0.05, 5, 1)
+    #         # prog_tanks_pressure_four(0.05, 1, 1)
+    #         end = time.time()
+    #         # print("\nTime elapsed :", (end - start), "seconds")
+    #         dur = end - start
+    #         print(i, "\t:\t", dur)
+    #         total_time += dur
+    #
+    #     print("\nAverage :\t", total_time / repeat)
 
 
 if __name__ == '__main__':
