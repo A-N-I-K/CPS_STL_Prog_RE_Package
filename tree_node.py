@@ -1,6 +1,4 @@
 '''
-Created on Jan 31, 2023
-
 @author: ANIK
 '''
 
