@@ -163,6 +163,16 @@ def genSynTree(exp):
     operators = Operators(operators)
     parser = ExpressionParser(operators)
     expTree = parser.syntax_tree(exp).preorder()
+    
+    for i in range(len(expTree)):
+        
+        if expTree[i][0] == 'U' or expTree[i][0] == 'R':
+
+            exp = expTree[i]
+            expTree.pop(i)
+            expTree.insert(i, 'F' + exp[1:])
+            expTree.insert(i + 1, 'AND')
+            expTree.insert(i + 2, 'G' + exp[1:])
 
     synTree = Tree()
     selfID = [0]
@@ -309,11 +319,11 @@ def printMatrix(qMat):
 def main():
 
     if len(sys.argv) != 3:
-
+    
         print('Missing or invalid STL formula.')
-
+    
     else:
-
+    
         exp = sys.argv[1]
         time = float(sys.argv[2])
         valid = False
@@ -323,22 +333,22 @@ def main():
         synTree.show()
 
         for i in range(len(exp)):
-
+        
             if exp[i] == '[':
-
+        
                 lower = exp[i + 1:exp[i + 2:].find(',') + i + 2]
                 upper = exp[i + len(lower) + 3:exp[i + 4:].find(']') + i + 4]
-
+        
                 if float(lower) < time and time < float(upper):
-
+        
                     valid = True
-
+        
         if not valid:
-
+        
             print('This formula does not require partitioning.')
-
+        
         else:
-
+        
             synTree = treePartition(synTree, qMat, -1, time)
             print('SMT syntax tree partitioned at time {}:\n'.format(time))
             synTree.show()
