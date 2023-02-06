@@ -11,7 +11,7 @@ This is a Repeatability Evaluation Package for the ICCPS 2023 paper Monitoring S
      - [TreeLib Tool](https://github.com/caesar0301/treelib) (pip install treelib)
      - [Algebraic Expression Parser](https://github.com/mohamedsalahh/Algebraic-Expression-Parser) (pip install Algebraic-Expression-Parser)
 - Execute the Python scripts from within the CPS_STL_Prog_RE_Package directory to generate results reported in the paper Monitoring Signal Temporal Logic in Distributed Cyber-physical Systems.
-- Alternatively an Open Virtual Appliance file with all the prerequisites installed can be obtained from [here](https://drive.google.com/drive/u/1/folders/1IcoNuNLWhI4AHDvDWieHcKazeUa9qhJA).
+- Alternatively, obtain and mount an Open Virtual Appliance file with all the prerequisites installed from [here](https://drive.google.com/drive/u/1/folders/1IcoNuNLWhI4AHDvDWieHcKazeUa9qhJA).
 
 ## Repeatability Evaluation Package Elements
 
