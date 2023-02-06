@@ -1729,7 +1729,7 @@ def z3SqDist1d(x1, x2):
 
 def main():
     
-    repeat = 2
+    repeat = 10
     eps = 0.05
     
     agents2 = True

@@ -566,7 +566,7 @@ def getDataTank(agent_ID):
 
 def main():
 
-    repeat = 2
+    repeat = 10
     eps = 0.05
 
     agents2 = True
