@@ -79,7 +79,7 @@ def addNodeRec(selfID, parentID, selfVar, parentVar, synTree, expTree, qMat, qPa
 
             elif not (expTree[selfID[0]][0] in binaryOperators or expTree[selfID[0]][0] in unaryOperators):
 
-                synTree.create_node('(\sigma, 0) \models {}'.format(expTree[selfID[0]]), selfID[0])
+                synTree.create_node('(\sigma, 0) \models {}'.format(expTree[selfID[0]]), selfID[0], parent = parentID)
 
             else:
 
@@ -328,7 +328,7 @@ def main():
 
                 lower = exp[i + 1:exp[i + 2:].find(',') + i + 2]
                 upper = exp[i + len(lower) + 3:exp[i + 4:].find(']') + i + 4]
-                
+
                 if float(lower) < time and time < float(upper):
 
                     valid = True
@@ -342,6 +342,7 @@ def main():
             synTree = treePartition(synTree, qMat, -1, time)
             print('SMT syntax tree partitioned at time {}:\n'.format(time))
             synTree.show()
+
 
 if __name__ == '__main__':
 
