@@ -730,6 +730,8 @@ def main():
 
             print("{}\t".format(total_time / repeat), end = "")
 
+    print()
+
 
 if __name__ == '__main__':
 

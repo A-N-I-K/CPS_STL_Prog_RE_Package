@@ -2,6 +2,8 @@
 @author: ANIK
 '''
 
+from multiprocessing import freeze_support
+import multiprocessing
 import time
 
 from z3 import *
@@ -141,13 +143,24 @@ def prog_tanks_pressure(eps, sigDur, segCount):
         # s.add(z3Interpolate(c_flow, v) == 15)
         # s.add(v == 10)
 
+        start = time.time()
+
         if s.check() == sat:
 
             m = s.model()
             # out = "%s %s" % (m[test], m[test2])
             # print(m)
 
+        end = time.time()
+
+        # else:
+        #
+        #     print("unsat")
+
         s.reset()
+
+        dur = end - start
+        return dur
 
 
 def prog_tanks_pressure_3(eps, sigDur, segCount):
@@ -307,13 +320,24 @@ def prog_tanks_pressure_3(eps, sigDur, segCount):
         # s.add(z3Interpolate(c_flow, v) == 15)
         # s.add(v == 10)
 
+        start = time.time()
+
         if s.check() == sat:
 
             m = s.model()
             # out = "%s %s" % (m[test], m[test2])
             # print(m)
 
+        end = time.time()
+
+        # else:
+        #
+        #     print("unsat")
+
         s.reset()
+
+        dur = end - start
+        return dur
 
 
 def prog_tanks_pressure_4(eps, sigDur, segCount):
@@ -502,13 +526,24 @@ def prog_tanks_pressure_4(eps, sigDur, segCount):
         # s.add(z3Interpolate(c_flow, v) == 15)
         # s.add(v == 10)
 
+        start = time.time()
+
         if s.check() == sat:
 
             m = s.model()
             # out = "%s %s" % (m[test], m[test2])
             # print(m)
 
+        end = time.time()
+
+        # else:
+        #
+        #     print("unsat")
+
         s.reset()
+
+        dur = end - start
+        return dur
 
 
 def z3Interpolate(f, p):
@@ -566,7 +601,6 @@ def getDataTank(agent_ID):
 
 def main():
 
-    repeat = 10
     eps = 0.05
 
     agents2 = True
@@ -599,61 +633,99 @@ def main():
 
     print("Pressure level safety property:\n")
 
-    print("\t Duration 1s\t\t Duration 2s\t\t Duration 3s\t\t Duration 4s\t\t Duration 5s", end = " ")
+    repeat = 4
+    multiproc = False;
+
+    print("\tDuration 1s\t\tDuration 2s\t\tDuration 3s\t\tDuration 4s\t\tDuration 5s", end = "")
 
     if agents2:
 
-        print("\n\n2 Tanks\t", end = " ")
+        print("\n\n2 Tanks\t", end = "")
 
         for i in range(5):
 
             total_time = 0
 
-            for j in range(repeat):
+            if multiproc:
 
-                start = time.time()
-                prog_tanks_pressure(eps, i + 1, 1)
-                end = time.time()
-                dur = end - start
-                total_time += dur
+                pool = multiprocessing.Pool()
 
-            print("{}\t".format(total_time / repeat), end = " ")
+                inputs = [(eps, i + 1, 1) for j in range(repeat)]
+                outputs = pool.starmap(prog_tanks_pressure, inputs)
+
+                total_time = sum(outputs)
+
+            else:
+
+                for j in range(repeat):
+
+                    start = time.time()
+                    # prog_tanks_pressure(eps, i + 1, 1)
+                    end = time.time()
+                    dur = end - start
+                    total_time += prog_tanks_pressure(eps, i + 1, 1)
+
+            print("{}\t".format(total_time / repeat), end = "")
 
     if agents3:
 
-        print("\n\n3 Tanks\t", end = " ")
+        print("\n\n3 Tanks\t", end = "")
 
         for i in range(5):
 
             total_time = 0
 
-            for j in range(repeat):
+            if multiproc:
 
-                start = time.time()
-                prog_tanks_pressure_3(eps, i + 1, 1)
-                end = time.time()
-                dur = end - start
-                total_time += dur
+                pool = multiprocessing.Pool()
 
-            print("{}\t".format(total_time / repeat), end = " ")
+                inputs = [(eps, i + 1, 1) for j in range(repeat)]
+                outputs = pool.starmap(prog_tanks_pressure_3, inputs)
+
+                total_time = sum(outputs)
+
+            else:
+
+                for j in range(repeat):
+
+                    start = time.time()
+                    # prog_tanks_pressure_3(eps, i + 1, 1)
+                    end = time.time()
+                    dur = end - start
+                    total_time += prog_tanks_pressure_3(eps, i + 1, 1)
+
+            print("{}\t".format(total_time / repeat), end = "")
 
     if agents4:
 
-        print("\n\n4 Tanks\t", end = " ")
+        print("\n\n4 Tanks\t", end = "")
 
         for i in range(5):
 
             total_time = 0
 
-            for j in range(repeat):
+            if multiproc:
 
-                start = time.time()
-                prog_tanks_pressure_4(eps, i + 1, 1)
-                end = time.time()
-                dur = end - start
-                total_time += dur
+                pool = multiprocessing.Pool()
 
-            print("{}\t".format(total_time / repeat), end = " ")
+                inputs = [(eps, i + 1, 1) for j in range(repeat)]
+                outputs = pool.starmap(prog_tanks_pressure_4, inputs)
+
+                total_time = sum(outputs)
+
+            else:
+
+                for j in range(repeat):
+
+                    start = time.time()
+                    # prog_tanks_pressure_4(eps, i + 1, 1)
+                    end = time.time()
+                    dur = end - start
+                    total_time += prog_tanks_pressure_4(eps, i + 1, 1)
+
+            print("{}\t".format(total_time / repeat), end = "")
+
+    print()
 
 
 if __name__ == '__main__':
