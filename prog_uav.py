@@ -2254,7 +2254,7 @@ def main():
     #
     # print("\n\nEventually land:\n")
 
-    repeat = 1
+    repeat = 2
     multiproc = True;
 
     print("\t\tSegment 1\t\tSegment 2\t\tSegment 3\t\tSegment 4\t\tSegment 5", end = "")
