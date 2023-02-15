@@ -160,7 +160,7 @@ def prog_uav_mutual_separation(eps, sigDur, segCount, segID):
         #
         #     print("unsat")
 
-        s.reset()
+        # s.reset()
 
         dur = end - start
         return dur
@@ -346,7 +346,7 @@ def prog_uav_mutual_separation_3(eps, sigDur, segCount, segID):
         #
         #     print("unsat")
 
-        s.reset()
+        # s.reset()
 
         dur = end - start
         return dur
@@ -567,7 +567,7 @@ def prog_uav_mutual_separation_4(eps, sigDur, segCount, segID):
         #
         #     print("unsat")
 
-        s.reset()
+        # s.reset()
 
         dur = end - start
         return dur
@@ -742,7 +742,7 @@ def prog_uav_hover(eps, sigDur, segCount, segID):
         #
         #     print("unsat")
 
-        s.reset()
+        # s.reset()
 
         dur = end - start
         return dur
@@ -953,7 +953,7 @@ def prog_uav_hover_3(eps, sigDur, segCount, segID):
         #
         #     print("unsat")
 
-        s.reset()
+        # s.reset()
 
         dur = end - start
         return dur
@@ -1195,7 +1195,7 @@ def prog_uav_hover_4(eps, sigDur, segCount, segID):
         #
         #     print("unsat")
 
-        s.reset()
+        # s.reset()
 
         dur = end - start
         return dur
@@ -1347,7 +1347,7 @@ def prog_uav_land(eps, sigDur, segCount, segID):
         #
         #     print("unsat")
 
-        s.reset()
+        # s.reset()
 
         dur = end - start
         return dur
@@ -1526,7 +1526,7 @@ def prog_uav_land_3(eps, sigDur, segCount, segID):
         #
         #     print("unsat")
 
-        s.reset()
+        # s.reset()
 
         dur = end - start
         return dur
@@ -1733,7 +1733,7 @@ def prog_uav_land_4(eps, sigDur, segCount, segID):
         #
         #     print("unsat")
 
-        s.reset()
+        # s.reset()
 
         dur = end - start
         return dur
@@ -2109,6 +2109,6 @@ def main():
 
 if __name__ == '__main__':
 
-    freeze_support()
+    # freeze_support()
     main()
     pass
