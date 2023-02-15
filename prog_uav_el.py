@@ -639,7 +639,7 @@ def main():
     print("Eventually land:\n")
 
     repeat = 4
-    multiproc = False;
+    multiproc = True;
 
     print("\t\tSegment 1\t\tSegment 2\t\tSegment 3\t\tSegment 4\t\tSegment 5", end = "")
 
