@@ -1920,7 +1920,7 @@ def main():
 
     print("\n\nEventually hover:\n")
 
-    repeat = 8
+    repeat = 4
     multiproc = True;
 
     print("\t\tSegment 1\t\tSegment 2\t\tSegment 3\t\tSegment 4\t\tSegment 5", end = "")
@@ -2109,6 +2109,6 @@ def main():
 
 if __name__ == '__main__':
 
-    # freeze_support()
+    freeze_support()
     main()
     pass
