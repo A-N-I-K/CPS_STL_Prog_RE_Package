@@ -2,6 +2,8 @@
 @author: ANIK
 '''
 
+from multiprocessing import freeze_support
+import multiprocessing
 import time
 
 from z3 import *
@@ -144,17 +146,24 @@ def prog_uav_mutual_separation(eps, sigDur, segCount, segID):
 
         s.add(ForAll(v, Implies(And(v >= timestamps0[0], v <= timestamps0[-1]), z3Interpolate(c_flow, v) >= 0)))
 
+        start = time.time()
+
         if s.check() == sat:
 
             m = s.model()
             # out = "%s %s" % (m[test], m[test2])
             # print(m)
 
+        end = time.time()
+
         # else:
         #
         #     print("unsat")
 
         s.reset()
+
+        dur = end - start
+        return dur
 
 
 def prog_uav_mutual_separation_3(eps, sigDur, segCount, segID):
@@ -323,17 +332,24 @@ def prog_uav_mutual_separation_3(eps, sigDur, segCount, segID):
 
         s.add(ForAll(v, Implies(And(v >= timestamps0[0], v <= timestamps0[-1]), z3Interpolate(c_flow, v) >= 0)))
 
+        start = time.time()
+
         if s.check() == sat:
 
             m = s.model()
             # out = "%s %s" % (m[test], m[test2])
             # print(m)
 
+        end = time.time()
+
         # else:
         #
         #     print("unsat")
 
         s.reset()
+
+        dur = end - start
+        return dur
 
 
 def prog_uav_mutual_separation_4(eps, sigDur, segCount, segID):
@@ -537,17 +553,24 @@ def prog_uav_mutual_separation_4(eps, sigDur, segCount, segID):
 
         s.add(ForAll(v, Implies(And(v >= timestamps0[0], v <= timestamps0[-1]), z3Interpolate(c_flow, v) >= 0)))
 
+        start = time.time()
+
         if s.check() == sat:
 
             m = s.model()
             # out = "%s %s" % (m[test], m[test2])
             # print(m)
 
+        end = time.time()
+
         # else:
         #
         #     print("unsat")
 
         s.reset()
+
+        dur = end - start
+        return dur
 
 
 def prog_uav_hover(eps, sigDur, segCount, segID):
@@ -705,17 +728,24 @@ def prog_uav_hover(eps, sigDur, segCount, segID):
 
         # ===== TEST SMT END ===== #
 
+        start = time.time()
+
         if s.check() == sat:
 
             m = s.model()
             # out = "%s %s" % (m[test], m[test2])
-            # print(m[v])
+            # print(m)
+
+        end = time.time()
 
         # else:
         #
         #     print("unsat")
 
         s.reset()
+
+        dur = end - start
+        return dur
 
 
 def prog_uav_hover_3(eps, sigDur, segCount, segID):
@@ -909,17 +939,24 @@ def prog_uav_hover_3(eps, sigDur, segCount, segID):
 
         # ===== TEST SMT END ===== #
 
+        start = time.time()
+
         if s.check() == sat:
 
             m = s.model()
             # out = "%s %s" % (m[test], m[test2])
-            # print(m[v])
+            # print(m)
+
+        end = time.time()
 
         # else:
         #
         #     print("unsat")
 
         s.reset()
+
+        dur = end - start
+        return dur
 
 
 def prog_uav_hover_4(eps, sigDur, segCount, segID):
@@ -1144,17 +1181,24 @@ def prog_uav_hover_4(eps, sigDur, segCount, segID):
 
         # ===== TEST SMT END ===== #
 
+        start = time.time()
+
         if s.check() == sat:
 
             m = s.model()
             # out = "%s %s" % (m[test], m[test2])
-            # print(m[v])
+            # print(m)
+
+        end = time.time()
 
         # else:
         #
         #     print("unsat")
 
         s.reset()
+
+        dur = end - start
+        return dur
 
 
 def prog_uav_land(eps, sigDur, segCount, segID):
@@ -1289,17 +1333,24 @@ def prog_uav_land(eps, sigDur, segCount, segID):
 
         # ===== TEST SMT END ===== #
 
+        start = time.time()
+
         if s.check() == sat:
 
             m = s.model()
             # out = "%s %s" % (m[test], m[test2])
-            # print(m[v])
+            # print(m)
+
+        end = time.time()
 
         # else:
         #
         #     print("unsat")
 
         s.reset()
+
+        dur = end - start
+        return dur
 
 
 def prog_uav_land_3(eps, sigDur, segCount, segID):
@@ -1461,17 +1512,24 @@ def prog_uav_land_3(eps, sigDur, segCount, segID):
 
         # ===== TEST SMT END ===== #
 
+        start = time.time()
+
         if s.check() == sat:
 
             m = s.model()
             # out = "%s %s" % (m[test], m[test2])
-            # print(m[v])
+            # print(m)
+
+        end = time.time()
 
         # else:
         #
         #     print("unsat")
 
         s.reset()
+
+        dur = end - start
+        return dur
 
 
 def prog_uav_land_4(eps, sigDur, segCount, segID):
@@ -1661,17 +1719,24 @@ def prog_uav_land_4(eps, sigDur, segCount, segID):
 
         # ===== TEST SMT END ===== #
 
+        start = time.time()
+
         if s.check() == sat:
 
             m = s.model()
             # out = "%s %s" % (m[test], m[test2])
-            # print(m[v])
+            # print(m)
+
+        end = time.time()
 
         # else:
         #
         #     print("unsat")
 
         s.reset()
+
+        dur = end - start
+        return dur
 
 
 def getTankData(agent_ID):
@@ -1728,8 +1793,7 @@ def z3SqDist1d(x1, x2):
 
 
 def main():
-    
-    repeat = 10
+
     eps = 0.05
     
     agents2 = True
@@ -1762,180 +1826,289 @@ def main():
 
     print("Mutual separation:\n")
 
-    print("\t\tSegment 1\t\tSegment 2\t\tSegment 3\t\tSegment 4\t\tSegment 5", end = " ")
+    repeat = 12
+    multiproc = False;
+
+    print("\t\tSegment 1\t\tSegment 2\t\tSegment 3\t\tSegment 4\t\tSegment 5", end = "")
     
     if agents2:
 
-        print("\n\n2 Agents\t", end = " ")
+        print("\n\n2 Agents\t", end = "")
     
         for i in range(5):
-    
+
             total_time = 0
+
+            if multiproc:
+
+                pool = multiprocessing.Pool()
+
+                inputs = [(eps, 1, 1, i + 1) for j in range(repeat)]
+                outputs = pool.starmap(prog_uav_mutual_separation, inputs)
+
+                total_time = sum(outputs)
+
+            else:
     
-            for j in range(repeat):
+                for j in range(repeat):
+
+                    start = time.time()
+                    # prog_uav_mutual_separation(eps, 1, 1, i + 1)
+                    end = time.time()
+                    dur = end - start
+                    total_time += prog_uav_mutual_separation(eps, 1, 1, i + 1)
     
-                start = time.time()
-                prog_uav_mutual_separation(eps, 1, 1, i + 1)
-                end = time.time()
-                dur = end - start
-                total_time += dur
-    
-            print("{}\t".format(total_time / repeat), end = " ")
+            print("{}\t".format(total_time / repeat), end = "")
 
     if agents3:
     
-        print("\n\n3 Agents\t", end = " ")
+        print("\n\n3 Agents\t", end = "")
     
         for i in range(5):
-    
+
             total_time = 0
+
+            if multiproc:
+
+                pool = multiprocessing.Pool()
+
+                inputs = [(eps, 1, 1, i + 1) for j in range(repeat)]
+                outputs = pool.starmap(prog_uav_mutual_separation_3, inputs)
+
+                total_time = sum(outputs)
+
+            else:
     
-            for j in range(repeat):
+                for j in range(repeat):
+
+                    start = time.time()
+                    # prog_uav_mutual_separation_3(eps, 1, 1, i + 1)
+                    end = time.time()
+                    dur = end - start
+                    total_time += prog_uav_mutual_separation_3(eps, 1, 1, i + 1)
     
-                start = time.time()
-                prog_uav_mutual_separation_3(eps, 1, 1, i + 1)
-                end = time.time()
-                dur = end - start
-                total_time += dur
-    
-            print("{}\t".format(total_time / repeat), end = " ")
+            print("{}\t".format(total_time / repeat), end = "")
             
     if agents4:
 
-        print("\n\n4 Agents\t", end = " ")
+        print("\n\n4 Agents\t", end = "")
     
         for i in range(5):
-    
+
             total_time = 0
+
+            if multiproc:
+
+                pool = multiprocessing.Pool()
+
+                inputs = [(eps, 1, 1, i + 1) for j in range(repeat)]
+                outputs = pool.starmap(prog_uav_mutual_separation_4, inputs)
+
+                total_time = sum(outputs)
+
+            else:
     
-            for j in range(repeat):
+                for j in range(repeat):
+
+                    start = time.time()
+                    # prog_uav_mutual_separation_4(eps, 1, 1, i + 1)
+                    end = time.time()
+                    dur = end - start
+                    total_time += prog_uav_mutual_separation_4(eps, 1, 1, i + 1)
     
-                start = time.time()
-                prog_uav_mutual_separation_4(eps, 1, 1, i + 1)
-                end = time.time()
-                dur = end - start
-                total_time += dur
-    
-            print("{}\t".format(total_time / repeat), end = " ")
+            print("{}\t".format(total_time / repeat), end = "")
 
     print("\n\nEventually hover:\n")
 
-    print("\t\tSegment 1\t\tSegment 2\t\tSegment 3\t\tSegment 4\t\tSegment 5", end = " ")
+    repeat = 8
+    multiproc = True;
+
+    print("\t\tSegment 1\t\tSegment 2\t\tSegment 3\t\tSegment 4\t\tSegment 5", end = "")
     
     if agents2:
 
-        print("\n\n2 Agents\t", end = " ")
+        print("\n\n2 Agents\t", end = "")
     
         for i in range(5):
-    
+
             total_time = 0
+
+            if multiproc:
+
+                pool = multiprocessing.Pool()
+
+                inputs = [(eps, 1, 1, i + 1) for j in range(repeat)]
+                outputs = pool.starmap(prog_uav_hover, inputs)
+
+                total_time = sum(outputs)
+
+            else:
     
-            for j in range(repeat):
+                for j in range(repeat):
+
+                    start = time.time()
+                    # prog_uav_hover(eps, 1, 1, i + 1)
+                    end = time.time()
+                    dur = end - start
+                    total_time += prog_uav_hover(eps, 1, 1, i + 1)
     
-                start = time.time()
-                prog_uav_hover(eps, 1, 1, i + 1)
-                end = time.time()
-                dur = end - start
-                total_time += dur
-    
-            print("{}\t".format(total_time / repeat), end = " ")
+            print("{}\t".format(total_time / repeat), end = "")
             
     if agents3:
 
-        print("\n\n3 Agents\t", end = " ")
+        print("\n\n3 Agents\t", end = "")
     
         for i in range(5):
-    
+
             total_time = 0
+
+            if multiproc:
+
+                pool = multiprocessing.Pool()
+
+                inputs = [(eps, 1, 1, i + 1) for j in range(repeat)]
+                outputs = pool.starmap(prog_uav_hover_3, inputs)
+
+                total_time = sum(outputs)
+
+            else:
     
-            for j in range(repeat):
+                for j in range(repeat):
+
+                    start = time.time()
+                    # prog_uav_hover_3(eps, 1, 1, i + 1)
+                    end = time.time()
+                    dur = end - start
+                    total_time += prog_uav_hover_3(eps, 1, 1, i + 1)
     
-                start = time.time()
-                prog_uav_hover_3(eps, 1, 1, i + 1)
-                end = time.time()
-                dur = end - start
-                total_time += dur
-    
-            print("{}\t".format(total_time / repeat), end = " ")
+            print("{}\t".format(total_time / repeat), end = "")
             
     if agents4:
 
-        print("\n\n4 Agents\t", end = " ")
+        print("\n\n4 Agents\t", end = "")
     
         for i in range(5):
-    
+
             total_time = 0
+
+            if multiproc:
+
+                pool = multiprocessing.Pool()
+
+                inputs = [(eps, 1, 1, i + 1) for j in range(repeat)]
+                outputs = pool.starmap(prog_uav_hover_4, inputs)
+
+                total_time = sum(outputs)
+
+            else:
     
-            for j in range(repeat):
+                for j in range(repeat):
+
+                    start = time.time()
+                    # prog_uav_hover_4(eps, 1, 1, i + 1)
+                    end = time.time()
+                    dur = end - start
+                    total_time += prog_uav_hover_4(eps, 1, 1, i + 1)
     
-                start = time.time()
-                prog_uav_hover_4(eps, 1, 1, i + 1)
-                end = time.time()
-                dur = end - start
-                total_time += dur
-    
-            print("{}\t".format(total_time / repeat), end = " ")
+            print("{}\t".format(total_time / repeat), end = "")
 
     print("\n\nEventually land:\n")
 
-    print("\t\tSegment 1\t\tSegment 2\t\tSegment 3\t\tSegment 4\t\tSegment 5", end = " ")
+    repeat = 4
+    multiproc = True;
+
+    print("\t\tSegment 1\t\tSegment 2\t\tSegment 3\t\tSegment 4\t\tSegment 5", end = "")
     
     if agents2:
 
-        print("\n\n2 Agents\t", end = " ")
+        print("\n\n2 Agents\t", end = "")
     
         for i in range(5):
-    
+
             total_time = 0
+
+            if multiproc:
+
+                pool = multiprocessing.Pool()
+
+                inputs = [(eps, 1, 1, i + 1) for j in range(repeat)]
+                outputs = pool.starmap(prog_uav_land, inputs)
+
+                total_time = sum(outputs)
+
+            else:
     
-            for j in range(repeat):
+                for j in range(repeat):
+
+                    start = time.time()
+                    # prog_uav_land(eps, 1, 1, i + 1)
+                    end = time.time()
+                    dur = end - start
+                    total_time += prog_uav_land(eps, 1, 1, i + 1)
     
-                start = time.time()
-                prog_uav_land(eps, 1, 1, i + 1)
-                end = time.time()
-                dur = end - start
-                total_time += dur
-    
-            print("{}\t".format(total_time / repeat), end = " ")
+            print("{}\t".format(total_time / repeat), end = "")
             
     if agents3:
 
-        print("\n\n3 Agents\t", end = " ")
+        print("\n\n3 Agents\t", end = "")
 
         for i in range(5):
-    
+
             total_time = 0
+
+            if multiproc:
+
+                pool = multiprocessing.Pool()
+
+                inputs = [(eps, 1, 1, i + 1) for j in range(repeat)]
+                outputs = pool.starmap(prog_uav_land_3, inputs)
+
+                total_time = sum(outputs)
+
+            else:
     
-            for j in range(repeat):
+                for j in range(repeat):
+
+                    start = time.time()
+                    # prog_uav_land_3(eps, 1, 1, i + 1)
+                    end = time.time()
+                    dur = end - start
+                    total_time += prog_uav_land_3(eps, 1, 1, i + 1)
     
-                start = time.time()
-                prog_uav_land_3(eps, 1, 1, i + 1)
-                end = time.time()
-                dur = end - start
-                total_time += dur
-    
-            print("{}\t".format(total_time / repeat), end = " ")
+            print("{}\t".format(total_time / repeat), end = "")
             
     if agents4:
 
-        print("\n\n4 Agents\t", end = " ")
+        print("\n\n4 Agents\t", end = "")
     
         for i in range(5):
-    
+
             total_time = 0
+
+            if multiproc:
+
+                pool = multiprocessing.Pool()
+
+                inputs = [(eps, 1, 1, i + 1) for j in range(repeat)]
+                outputs = pool.starmap(prog_uav_land_4, inputs)
+
+                total_time = sum(outputs)
+
+            else:
     
-            for j in range(repeat):
+                for j in range(repeat):
+
+                    start = time.time()
+                    # prog_uav_land_4(eps, 1, 1, i + 1)
+                    end = time.time()
+                    dur = end - start
+                    total_time += prog_uav_land_4(eps, 1, 1, i + 1)
     
-                start = time.time()
-                prog_uav_land_4(eps, 1, 1, i + 1)
-                end = time.time()
-                dur = end - start
-                total_time += dur
-    
-            print("{}\t".format(total_time / repeat), end = " ")
+            print("{}\t".format(total_time / repeat), end = "")
 
 
 if __name__ == '__main__':
 
+    # freeze_support()
     main()
     pass
