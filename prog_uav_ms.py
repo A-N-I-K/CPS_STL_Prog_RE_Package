@@ -860,7 +860,7 @@ def main():
             agents2 = False
             agents3 = False
 
-    print("Reproducing experiments...\n")
+    print("\nReproducing experiments...\n")
 
     print("Mutual separation:\n")
 

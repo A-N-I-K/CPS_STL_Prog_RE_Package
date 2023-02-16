@@ -2062,7 +2062,7 @@ def main():
             agents2 = False
             agents3 = False
 
-    print("NOTICE: If you experience high (10+ minutes) runtime, please run scripts (prog_uav_ms.py, prog_uav_eh.py and prog_uav_el.py) separately for each experiment.")
+    print("\n****WARNING**** If you experience high (10+ minutes) runtime, please run the scripts (prog_uav_ms.py, prog_uav_eh.py and prog_uav_el.py) separately for each experiment.\n")
 
     print("Reproducing experiments...\n")
 
